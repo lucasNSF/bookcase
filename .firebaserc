@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "bookcase-eef62": {
+      "hosting": {
+        "bookcase": [
+          "bookcase-eef62"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "bookcase-eef62"
+  }
+}

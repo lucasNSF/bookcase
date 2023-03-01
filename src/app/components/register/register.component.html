@@ -1,0 +1,62 @@
+<ng-template matStepperIcon="home">
+  <mat-icon fontIcon="home" aria-label="home icon" aria-hidden="false">home</mat-icon>
+</ng-template>
+
+<mat-stepper>
+  <mat-step state="home" label="Home" editable="false" completed="false">
+    <section class="welcome-page">
+      <div class="container-img">
+        <img src="assets/images/logo.png" alt="bookcase logo">
+      </div>
+      <h1 class="title">Bookcase</h1>
+      <p class="description">Store, share and retrieve all your adventures in one place</p>
+      <button class="btn-primary" mat-button matStepperNext>Get Started</button>
+    </section>
+  </mat-step>
+
+  <mat-step label="Register" state="edit">
+    <section class="register-page">
+      <div class="row">
+        <form class="col s12">
+          <div class="row">
+            <div class="input-field col s4">
+              <input type="text" id="firstName">
+              <label for="firstName">First Name</label>
+            </div>
+            <div class="input-field col s4">
+              <input type="text" id="lastName">
+              <label for="lastName">Last Name</label>
+            </div>
+            <div class="col s4">
+              <mat-form-field class="date-container" color="accent" appearance="outline">
+                <mat-label>Date of birth</mat-label>
+                <input class="date-input" matInput [matDatepicker]="picker">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker color="primary"></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s6">
+              <input type="password" id="password">
+              <label for="password">Create a password</label>
+              <mat-icon class="eye-icon prefix">remove_red_eye</mat-icon>
+            </div>
+            <div class="input-field col s6">
+              <input type="password" id="repeatedPassword">
+              <label for="repeatedPassword">Repeat the password</label>
+              <mat-icon class="eye-icon prefix">remove_red_eye</mat-icon>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="email" id="email">
+              <label for="email">Type your email</label>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+  </mat-step>
+</mat-stepper>
