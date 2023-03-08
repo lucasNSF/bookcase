@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+
+declare const $: any;
 
 @Component({
   selector: 'app-register',
@@ -8,8 +10,14 @@ import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
   providers: [
     {
       provide: STEPPER_GLOBAL_OPTIONS,
-      useValue: { displayDefaultIndicatorType: false },
-    },
-  ],
+      useValue: { displayDefaultIndicatorType: false }
+    }
+  ]
 })
-export class RegisterComponent {}
+export class RegisterComponent implements OnInit {
+  ngOnInit(): void {
+    $(function () {
+      $('.datepicker').datepicker();
+    });
+  }
+}

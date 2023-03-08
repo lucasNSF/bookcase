@@ -30,7 +30,10 @@
               "@angular/material/prebuilt-themes/purple-green.css",
               "src/styles.scss"
             ],
-            "scripts": ["./node_modules/materialize-css/dist/js/materialize.js"]
+            "scripts": [
+              "./node_modules/jquery/dist/jquery.js",
+              "./node_modules/materialize-css/dist/js/materialize.js"
+            ]
           },
           "configurations": {
             "production": {

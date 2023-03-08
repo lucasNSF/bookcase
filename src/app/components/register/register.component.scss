@@ -32,18 +32,16 @@ mat-stepper {
 }
 
 .register-page {
+  width: 50%;
+  margin: 0 auto;
+
   .eye-icon {
     right: 0.5rem;
   }
 
-  .date-container {
-    position: relative;
-    top: 0.3rem;
-
-    .date-input {
-      border: none;
-      box-shadow: none;
-    }
+  button[type='submit'] {
+    width: 25%;
+    margin-left: 37%;
   }
 }
 
