@@ -1,0 +1,49 @@
+<form [formGroup]="form">
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Nome</mat-label>
+      <input type="text" matInput formControlName="name" />
+      <mat-error *ngIf="form.get('name')?.hasError('required')">
+        O campo é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('name')?.hasError('minLength')">
+        Nome inválido
+      </mat-error>
+      <mat-error *ngIf="form.get('name')?.hasError('maxLength')">
+        Nome muito grande, máximo até 100 caracteres
+      </mat-error>
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input
+        type="email"
+        matInput
+        placeholder="exemplo@gmail.com"
+        formControlName="email" />
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Crie uma senha</mat-label>
+      <input type="password" matInput formControlName="password" />
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field appearance="fill">
+      <mat-label>Repita a senha</mat-label>
+      <input
+        type="password"
+        matInput
+        formControlName="repeatedPassword"
+        (keyup)="onRepeatedPasswordKeyup()" />
+    </mat-form-field>
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">
+    Registrar
+  </button>
+</form>
+
+<app-form-debug [form]="form"></app-form-debug>
