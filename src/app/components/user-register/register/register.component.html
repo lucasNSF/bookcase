@@ -6,10 +6,10 @@
       <mat-error *ngIf="form.get('name')?.hasError('required')">
         O campo é obrigatório
       </mat-error>
-      <mat-error *ngIf="form.get('name')?.hasError('minLength')">
+      <mat-error *ngIf="form.get('name')?.hasError('minlength')">
         Nome inválido
       </mat-error>
-      <mat-error *ngIf="form.get('name')?.hasError('maxLength')">
+      <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
         Nome muito grande, máximo até 100 caracteres
       </mat-error>
     </mat-form-field>
@@ -22,28 +22,49 @@
         matInput
         placeholder="exemplo@gmail.com"
         formControlName="email" />
+      <mat-error *ngIf="form.get('email')?.hasError('required')">
+        O campo é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('email')?.hasError('email')">
+        Formato de email inválido
+      </mat-error>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field appearance="fill">
       <mat-label>Crie uma senha</mat-label>
       <input type="password" matInput formControlName="password" />
+      <mat-error *ngIf="form.get('password')?.hasError('required')">
+        O campo é obrigatório
+      </mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('weakPassword')">
+        Senha muito fraca
+      </mat-error>
+      <mat-error *ngIf="form.get('password')?.hasError('maxlength')">
+        Tamanho limite de senha atingido
+      </mat-error>
     </mat-form-field>
   </div>
   <div>
     <mat-form-field appearance="fill">
       <mat-label>Repita a senha</mat-label>
-      <input
-        type="password"
-        matInput
-        formControlName="repeatedPassword"
-        (keyup)="onRepeatedPasswordKeyup()" />
+      <input type="password" matInput formControlName="repeatedPassword" />
+      <mat-error *ngIf="form.get('repeatedPassword')?.hasError('required')"
+        >Campo obrigatório</mat-error
+      >
+      <mat-error
+        *ngIf="form.get('repeatedPassword')?.hasError('passwordMismatch')">
+        A senha não é idêntica
+      </mat-error>
     </mat-form-field>
   </div>
 
-  <button mat-raised-button color="primary" type="submit" (click)="onSubmit()">
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    (click)="onSubmit()"
+    [disabled]="!form.valid">
     Registrar
   </button>
 </form>
-
-<app-form-debug [form]="form"></app-form-debug>
