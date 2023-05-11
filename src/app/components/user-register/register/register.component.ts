@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { User } from 'src/app/models/interfaces/User';
 import { PasswordMatchValidation } from 'src/app/models/validators/PasswordMatchValidation';
 import { PasswordStrongValidation } from 'src/app/models/validators/PasswordStrongValidation';
+import { UserService } from 'src/app/services/user/user.service';
 import { ValidationService } from 'src/app/services/validation/validation.service';
 
 @Component({
@@ -14,7 +16,8 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private validationService: ValidationService
+    private validationService: ValidationService,
+    private userService: UserService
   ) {
     this.form = this.formBuilder.group({
       name: [
@@ -43,8 +46,12 @@ export class RegisterComponent implements OnInit {
     );
   }
 
-  onSubmit(): void {
-    const formValues = this.form.value;
+  async onSubmit(): Promise<void> {
+    delete this.form.value['repeatedPassword'];
+    const formValues: User = this.form.value;
+    formValues.name = formValues.name.trim();
+
+    console.log('user registered');
     console.log(formValues);
     this.form.reset();
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
-import { ValidationStrategy } from 'src/app/models/validators/ValidationStrategy';
+import { ValidationStrategy } from 'src/app/models/interfaces/ValidationStrategy';
 
 @Injectable({
   providedIn: 'root',
