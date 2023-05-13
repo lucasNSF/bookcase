@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { UserCredential } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from 'src/app/models/interfaces/User';
+import { EmailValidation } from 'src/app/models/validators/EmailValidation';
 import { PasswordMatchValidation } from 'src/app/models/validators/PasswordMatchValidation';
 import { PasswordStrongValidation } from 'src/app/models/validators/PasswordStrongValidation';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ValidationService } from 'src/app/services/validation/validation.service';
 
@@ -17,7 +20,8 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private validationService: ValidationService,
-    private userService: UserService
+    private userService: UserService,
+    private authenticationService: AuthenticationService
   ) {
     this.form = this.formBuilder.group({
       name: [
@@ -28,7 +32,7 @@ export class RegisterComponent implements OnInit {
           Validators.maxLength(100),
         ],
       ],
-      email: [null, [Validators.required, Validators.email]],
+      email: [null, [Validators.required]],
       password: [null, [Validators.required, Validators.maxLength(200)]],
       repeatedPassword: [null, [Validators.required]],
     });
@@ -44,6 +48,11 @@ export class RegisterComponent implements OnInit {
       this.form.get('repeatedPassword')!,
       new PasswordMatchValidation()
     );
+
+    this.validationService.apply(
+      this.form.get('email')!,
+      new EmailValidation()
+    );
   }
 
   async onSubmit(): Promise<void> {
@@ -51,8 +60,17 @@ export class RegisterComponent implements OnInit {
     const formValues: User = this.form.value;
     formValues.name = formValues.name.trim();
 
-    console.log('user registered');
-    console.log(formValues);
+    try {
+      const userCredentials: UserCredential =
+        await this.authenticationService.registerUser(formValues);
+      await this.userService.addUser({
+        ...formValues,
+        id: userCredentials.user.uid,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
     this.form.reset();
   }
 }

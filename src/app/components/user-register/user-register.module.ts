@@ -11,6 +11,7 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
 import { FormDebugComponent } from './form-debug/form-debug.component';
 import { RegisterComponent } from './register/register.component';
 import { UserRegisterRoutingModule } from './user-register-routing.module';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @NgModule({
   declarations: [RegisterComponent, FormDebugComponent],
@@ -24,6 +25,6 @@ import { UserRegisterRoutingModule } from './user-register-routing.module';
     MatButtonModule,
     UserRegisterRoutingModule,
   ],
-  providers: [ValidationService, UserService],
+  providers: [ValidationService, UserService, AuthenticationService],
 })
 export class UserRegisterModule {}
