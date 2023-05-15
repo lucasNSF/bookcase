@@ -1,0 +1,41 @@
+.form-container {
+  width: 60%;
+  padding: 1.5rem;
+  padding-top: 4rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .title {
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    top: 1.5rem;
+    left: 3rem;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 2rem;
+  }
+
+  mat-form-field {
+    width: 40dvw;
+  }
+
+  .switch-theme {
+    position: absolute;
+    right: 3rem;
+    top: 2rem;
+  }
+
+  button[type='submit'] {
+    width: 20%;
+    padding: 1.2rem;
+  }
+}

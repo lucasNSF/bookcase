@@ -26,7 +26,11 @@ $app-light-theme: mat.define-light-theme(
   )
 );
 
-@include mat.all-component-themes($app-dark-theme);
+@include mat.all-component-themes($app-light-theme);
+
+.dark-theme {
+  @include mat.all-component-colors($app-dark-theme);
+}
 
 html,
 body {
