@@ -1,4 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$app-dark-primary: mat.define-palette(mat.$pink-palette);
+$app-dark-accent: mat.define-palette(mat.$blue-grey-palette, A200, A100, A400);
+
+$app-dark-theme: mat.define-dark-theme(
+  (
+    color: (
+      primary: $app-dark-primary,
+      accent: $app-dark-accent,
+    ),
+  )
+);
+
+$app-light-primary: mat.define-palette(mat.$deep-purple-palette);
+$app-light-accent: mat.define-palette(mat.$amber-palette, A200, A100, A400);
+
+$app-light-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $app-light-primary,
+      accent: $app-light-accent,
+    ),
+  )
+);
+
+@include mat.all-component-themes($app-dark-theme);
 
 html,
 body {

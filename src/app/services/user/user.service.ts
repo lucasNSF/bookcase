@@ -1,5 +1,20 @@
 import { Injectable } from '@angular/core';
-import { collection, CollectionReference, doc, DocumentReference, DocumentSnapshot, Firestore, getDoc, getDocs, query, Query, QueryDocumentSnapshot, QuerySnapshot, setDoc, where } from '@angular/fire/firestore';
+import {
+  collection,
+  CollectionReference,
+  doc,
+  DocumentReference,
+  DocumentSnapshot,
+  Firestore,
+  getDoc,
+  getDocs,
+  query,
+  Query,
+  QueryDocumentSnapshot,
+  QuerySnapshot,
+  setDoc,
+  where,
+} from '@angular/fire/firestore';
 import { UserAlreadyExistsError } from 'src/app/models/errors/UserAlreadyExistsError';
 import { User } from 'src/app/models/interfaces/User';
 
