@@ -2,6 +2,26 @@
 
 @include mat.core();
 
+@mixin color($theme) {
+  $color-config: mat.get-color-config($theme);
+  $primary-palette: map-get(
+    $map: $color-config,
+    $key: 'primary',
+  );
+  $accent-palette: map-get(
+    $map: $color-config,
+    $key: 'accent',
+  );
+
+  .bg-primary {
+    background-color: mat.get-color-from-palette($primary-palette);
+  }
+
+  .bg-accent {
+    background-color: mat.get-color-from-palette($accent-palette);
+  }
+}
+
 $app-dark-primary: mat.define-palette(mat.$pink-palette);
 $app-dark-accent: mat.define-palette(mat.$blue-grey-palette, A200, A100, A400);
 
@@ -27,9 +47,22 @@ $app-light-theme: mat.define-light-theme(
 );
 
 @include mat.all-component-themes($app-light-theme);
+@include color($app-light-theme);
 
 .dark-theme {
   @include mat.all-component-colors($app-dark-theme);
+  @include color($app-dark-theme);
+
+  background: radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.75) 100%
+    ),
+    url('assets/images/background.jpg');
+  background-position: center;
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 html,
@@ -39,4 +72,9 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  background: url('assets/images/background.jpg');
+  background-position: center;
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  background-size: cover;
 }

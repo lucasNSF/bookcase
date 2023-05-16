@@ -9,7 +9,7 @@
         <mat-label>Nome</mat-label>
         <input type="text" matInput formControlName="name" />
         <mat-error *ngIf="form.get('name')?.hasError('required')">
-          O campo é obrigatório
+          Campo obrigatório
         </mat-error>
         <mat-error *ngIf="form.get('name')?.hasError('minlength')">
           Nome inválido
@@ -28,7 +28,7 @@
           placeholder="exemplo@gmail.com"
           formControlName="email" />
         <mat-error *ngIf="form.get('email')?.hasError('required')">
-          O campo é obrigatório
+          Campo obrigatório
         </mat-error>
         <mat-error *ngIf="form.get('email')?.hasError('wrongEmail')">
           Formato de email inválido
@@ -40,7 +40,7 @@
         <mat-label>Crie uma senha</mat-label>
         <input type="password" matInput formControlName="password" />
         <mat-error *ngIf="form.get('password')?.hasError('required')">
-          O campo é obrigatório
+          Campo obrigatório
         </mat-error>
         <mat-error *ngIf="form.get('password')?.hasError('weakPassword')">
           Senha muito fraca
@@ -54,8 +54,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Repita a senha</mat-label>
         <input type="password" matInput formControlName="repeatedPassword" />
-        <mat-error *ngIf="form.get('repeatedPassword')?.hasError('required')"
-          >Campo obrigatório</mat-error
+        <mat-error *ngIf="form.get('repeatedPassword')?.hasError('required')">
+          Campo obrigatório</mat-error
         >
         <mat-error
           *ngIf="form.get('repeatedPassword')?.hasError('passwordMismatch')">
