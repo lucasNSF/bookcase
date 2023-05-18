@@ -46,11 +46,21 @@ $app-light-theme: mat.define-light-theme(
   )
 );
 
-@include mat.all-component-themes($app-light-theme);
+@include mat.core-theme($app-light-theme);
+@include mat.button-theme($app-light-theme);
+@include mat.card-theme($app-light-theme);
+@include mat.form-field-theme($app-light-theme);
+@include mat.input-theme($app-light-theme);
+@include mat.progress-spinner-theme($app-light-theme);
 @include color($app-light-theme);
 
 .dark-theme {
-  @include mat.all-component-colors($app-dark-theme);
+  @include mat.core-color($app-dark-theme);
+  @include mat.button-color($app-dark-theme);
+  @include mat.card-color($app-dark-theme);
+  @include mat.form-field-color($app-dark-theme);
+  @include mat.input-color($app-dark-theme);
+  @include mat.progress-spinner-color($app-dark-theme);
   @include color($app-dark-theme);
 
   background: radial-gradient(
@@ -77,4 +87,16 @@ body {
   background-origin: border-box;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.success-snackbar {
+  background-color: #4caf50;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.error-snackbar {
+  background-color: #f44336;
+  border-radius: 5px;
+  color: #fff;
 }

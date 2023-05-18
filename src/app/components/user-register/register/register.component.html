@@ -38,7 +38,11 @@
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Crie uma senha</mat-label>
-        <input type="password" matInput formControlName="password" />
+        <input
+          type="password"
+          matInput
+          formControlName="password"
+          (keyup)="syncPasswordInputValues()" />
         <mat-error *ngIf="form.get('password')?.hasError('required')">
           Campo obrigatório
         </mat-error>
@@ -48,12 +52,19 @@
         <mat-error *ngIf="form.get('password')?.hasError('maxlength')">
           Tamanho limite de senha atingido
         </mat-error>
+        <mat-error *ngIf="form.get('password')?.hasError('passwordMismatch')">
+          A senha não é idêntica
+        </mat-error>
       </mat-form-field>
     </div>
     <div>
       <mat-form-field appearance="outline">
         <mat-label>Repita a senha</mat-label>
-        <input type="password" matInput formControlName="repeatedPassword" />
+        <input
+          type="password"
+          matInput
+          formControlName="repeatedPassword"
+          (keyup)="syncPasswordInputValues()" />
         <mat-error *ngIf="form.get('repeatedPassword')?.hasError('required')">
           Campo obrigatório</mat-error
         >
@@ -69,8 +80,13 @@
       color="primary"
       type="submit"
       (click)="onSubmit()"
-      [disabled]="!form.valid">
-      Registrar
+      [disabled]="!form.valid && !isRegistering">
+      {{ isRegistering ? 'Registrando...' : 'Registrar' }}
+      <mat-progress-spinner
+        *ngIf="isRegistering"
+        mode="indeterminate"
+        color="accent"
+        diameter="15"></mat-progress-spinner>
     </button>
   </form>
 </mat-card>

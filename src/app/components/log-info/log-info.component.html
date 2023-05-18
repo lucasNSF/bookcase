@@ -1,0 +1,14 @@
+<span matSnackBarLabel class="log-label">
+  <mat-icon *ngIf="data.logType === 'error'" class="mat-18 info-icon"
+    >error</mat-icon
+  >
+  <mat-icon *ngIf="data.logType === 'success'" class="mat-18 info-icon"
+    >check_circle</mat-icon
+  >
+  {{ data.message }}
+</span>
+<span matSnackBarActions>
+  <mat-icon matSnackBarAction class="mat-18 close-icon" (click)="closeLog()"
+    >close</mat-icon
+  >
+</span>

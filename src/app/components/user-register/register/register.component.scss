@@ -50,3 +50,10 @@ mat-error {
     content: '*';
   }
 }
+
+mat-progress-spinner {
+  display: inline-block;
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
