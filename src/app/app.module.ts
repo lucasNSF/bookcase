@@ -9,6 +9,8 @@ import { environment } from './../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserRegisterModule } from './components/user-register/user-register.module';
+import { AuthenticationService } from './services/authentication/authentication.service';
+import { UserService } from './services/user/user.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,7 +23,7 @@ import { UserRegisterModule } from './components/user-register/user-register.mod
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
   ],
-  providers: [],
+  providers: [AuthenticationService, UserService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

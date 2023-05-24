@@ -42,7 +42,14 @@
           type="password"
           matInput
           formControlName="password"
-          (keyup)="syncPasswordInputValues()" />
+          (keyup)="syncPasswordInputValues()"
+          #password />
+        <mat-icon
+          class="mat-18 show-password"
+          appChangePasswordVisibility
+          [inputRef]="password"
+          >remove_red_eye</mat-icon
+        >
         <mat-error *ngIf="form.get('password')?.hasError('required')">
           Campo obrigatório
         </mat-error>
@@ -64,7 +71,15 @@
           type="password"
           matInput
           formControlName="repeatedPassword"
-          (keyup)="syncPasswordInputValues()" />
+          (keyup)="syncPasswordInputValues()"
+          #repeatedPassword />
+        <mat-icon
+          class="mat-18 show-password"
+          appChangePasswordVisibility
+          [inputRef]="repeatedPassword"
+          >remove_red_eye</mat-icon
+        >
+
         <mat-error *ngIf="form.get('repeatedPassword')?.hasError('required')">
           Campo obrigatório</mat-error
         >

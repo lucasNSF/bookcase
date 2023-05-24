@@ -28,17 +28,10 @@ export class RegisterComponent implements OnInit {
     private logService: LogService
   ) {
     this.form = this.formBuilder.group({
-      name: [
-        null,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(100),
-        ],
-      ],
-      email: [null, [Validators.required]],
-      password: [null, [Validators.required, Validators.maxLength(200)]],
-      repeatedPassword: [null, [Validators.required]],
+      name: [null],
+      email: [null],
+      password: [null],
+      repeatedPassword: [null],
     });
   }
 
@@ -61,8 +54,11 @@ export class RegisterComponent implements OnInit {
         id: userCredentials.user.uid,
       });
 
+      this.authenticationService.setUserInstance(userCredentials);
+
       this.logService.showSuccessLog('Cadastro concluído!');
       this.resetForm();
+      this.addFormValidators();
     } catch (err) {
       const log = this.validationService.handleFirebaseError(
         err as FirebaseError
@@ -79,6 +75,22 @@ export class RegisterComponent implements OnInit {
   }
 
   addFormValidators(): void {
+    this.form
+      .get('password')
+      ?.addValidators([Validators.required, Validators.maxLength(200)]);
+
+    this.form
+      .get('name')
+      ?.addValidators([
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(100),
+      ]);
+
+    this.form.get('repeatedPassword')?.addValidators([Validators.required]);
+
+    this.form.get('email')?.addValidators([Validators.required]);
+
     this.validationService.apply(
       this.form.get('password')!,
       new PasswordStrongValidation()
@@ -102,8 +114,9 @@ export class RegisterComponent implements OnInit {
 
   resetForm(): void {
     this.form.reset();
-    Object.values(this.form.controls).forEach(control =>
-      control.markAsUntouched()
-    );
+    Object.values(this.form.controls).forEach(control => {
+      control.clearValidators();
+      control.updateValueAndValidity();
+    });
   }
 }
