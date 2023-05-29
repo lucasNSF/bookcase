@@ -1,0 +1,17 @@
+mat-progress-spinner {
+  display: inline-block;
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
+
+mat-error {
+  overflow-y: hidden;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: inline;
+  margin-right: 0.5rem;
+  &::before {
+    content: '*';
+  }
+}

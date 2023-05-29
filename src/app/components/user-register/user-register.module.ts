@@ -9,13 +9,12 @@ import { LogService } from 'src/app/services/log/log.service';
 import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ThemeSwitchModule } from '../theme-switch/theme-switch.module';
-import { FormDebugComponent } from './form-debug/form-debug.component';
+import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserRegisterRoutingModule } from './user-register-routing.module';
-import { LoginComponent } from './login/login.component';
 
 @NgModule({
-  declarations: [RegisterComponent, FormDebugComponent, LoginComponent],
+  declarations: [RegisterComponent, LoginComponent],
   imports: [
     ReactiveFormsModule,
     FormsModule,

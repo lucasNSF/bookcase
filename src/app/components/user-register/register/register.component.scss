@@ -5,16 +5,13 @@ mat-progress-spinner {
   top: 2px;
 }
 
-.redirect {
-  margin: 0 auto;
-  margin-top: 15px;
-  font-size: 0.9rem;
-
-  a {
-    font-weight: 500;
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
+mat-error {
+  overflow-y: hidden;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: inline;
+  margin-right: 0.5rem;
+  &::before {
+    content: '*';
   }
 }
