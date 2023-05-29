@@ -12,9 +12,10 @@ import { ThemeSwitchModule } from '../theme-switch/theme-switch.module';
 import { FormDebugComponent } from './form-debug/form-debug.component';
 import { RegisterComponent } from './register/register.component';
 import { UserRegisterRoutingModule } from './user-register-routing.module';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
-  declarations: [RegisterComponent, FormDebugComponent],
+  declarations: [RegisterComponent, FormDebugComponent, LoginComponent],
   imports: [
     ReactiveFormsModule,
     FormsModule,

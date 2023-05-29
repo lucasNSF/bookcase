@@ -1,0 +1,30 @@
+<mat-card class="form-container">
+  <app-theme-switch class="switch-theme"></app-theme-switch>
+
+  <h1 class="title">Login</h1>
+
+  <form>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input
+          type="email"
+          matInput
+          placeholder="exemplo@gmail.com"
+          formControlName="email" />
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Crie uma senha</mat-label>
+        <input type="password" matInput formControlName="password" #password />
+        <mat-icon
+          class="mat-18 show-password"
+          appChangePasswordVisibility
+          [inputRef]="password"
+          >remove_red_eye</mat-icon
+        >
+      </mat-form-field>
+    </div>
+  </form>
+</mat-card>

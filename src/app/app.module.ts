@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { environment } from './../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { UserRegisterModule } from './components/user-register/user-register.module';
 import { AuthenticationService } from './services/authentication/authentication.service';
 import { UserService } from './services/user/user.service';
 
@@ -18,7 +17,6 @@ import { UserService } from './services/user/user.service';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    UserRegisterModule,
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),

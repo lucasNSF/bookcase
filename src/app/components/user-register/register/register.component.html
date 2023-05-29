@@ -95,7 +95,8 @@
       color="primary"
       type="submit"
       (click)="onSubmit()"
-      [disabled]="!form.valid && !isRegistering">
+      [disabled]="!form.valid"
+      #submitBtn>
       {{ isRegistering ? 'Registrando...' : 'Registrar' }}
       <mat-progress-spinner
         *ngIf="isRegistering"
@@ -104,6 +105,8 @@
         diameter="15"></mat-progress-spinner>
     </button>
   </form>
-</mat-card>
 
-<!-- <app-form-debug [form]="form"></app-form-debug> -->
+  <div class="redirect">
+    <p>Já tem uma conta? <a class="color-primary">Faça login</a></p>
+  </div>
+</mat-card>

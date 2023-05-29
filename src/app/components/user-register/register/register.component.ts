@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
 import { UserCredential } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
 import { User } from 'src/app/models/interfaces/User';
 import { EmailValidation } from 'src/app/models/validators/EmailValidation';
 import { PasswordMatchValidation } from 'src/app/models/validators/PasswordMatchValidation';
@@ -19,6 +20,7 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
 export class RegisterComponent implements OnInit {
   form: FormGroup;
   isRegistering = false;
+  @ViewChild('submitBtn') submitBtn!: MatButton;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -46,6 +48,7 @@ export class RegisterComponent implements OnInit {
 
     try {
       this.isRegistering = true;
+      this.submitBtn.disabled = true;
       const userCredentials: UserCredential =
         await this.authenticationService.registerUser(formValues);
 
@@ -67,6 +70,7 @@ export class RegisterComponent implements OnInit {
     }
 
     this.isRegistering = false;
+    this.submitBtn.disabled = false;
   }
 
   syncPasswordInputValues(): void {
