@@ -1,5 +1,15 @@
-import { ActivatedRouteSnapshot, UrlTree } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 
-const canActivateHome = (
-  route: ActivatedRouteSnapshot
-): boolean | UrlTree => {};
+import { AuthenticationService } from '../services/authentication/authentication.service';
+
+export const authGuard: CanActivateFn = () => {
+  const authenticationService = inject(AuthenticationService);
+  const router = inject(Router);
+
+  if (!authenticationService.getUserInstance()) {
+    router.navigate(['/', 'login']);
+  }
+
+  return true;
+};
