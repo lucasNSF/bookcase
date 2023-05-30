@@ -10,16 +10,18 @@ import { User } from 'src/app/models/interfaces/User';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private userInstance = this.auth.currentUser;
-
   constructor(private auth: Auth) {}
 
-  setUserInstance(user: UserCredential): void {
-    this.userInstance = user.user;
+  setUserInstance(credential: UserCredential): void {
+    localStorage.setItem('userId', credential.user.uid);
   }
 
-  getUserInstance() {
-    return this.userInstance;
+  getUserInstance(): string | null {
+    return localStorage.getItem('userId');
+  }
+
+  removeUserInstance(): void {
+    localStorage.removeItem('userId');
   }
 
   registerUser(user: User): Promise<UserCredential> {

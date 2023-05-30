@@ -3,6 +3,7 @@ import { FirebaseError } from '@angular/fire/app';
 import { UserCredential } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { Router } from '@angular/router';
 import { User } from 'src/app/models/interfaces/User';
 import { EmailValidation } from 'src/app/models/validators/EmailValidation';
 import { PasswordMatchValidation } from 'src/app/models/validators/PasswordMatchValidation';
@@ -27,7 +28,8 @@ export class RegisterComponent implements OnInit {
     private validationService: ValidationService,
     private userService: UserService,
     private authenticationService: AuthenticationService,
-    private logService: LogService
+    private logService: LogService,
+    private router: Router
   ) {
     this.form = this.formBuilder.group({
       name: [null],
@@ -62,6 +64,7 @@ export class RegisterComponent implements OnInit {
       this.logService.showSuccessLog('Cadastro concluído!');
       this.resetForm();
       this.addFormValidators();
+      this.router.navigate(['/', 'home']);
     } catch (err) {
       const log = this.validationService.handleFirebaseError(
         err as FirebaseError
