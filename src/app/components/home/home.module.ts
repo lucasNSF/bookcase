@@ -5,6 +5,7 @@ import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-m
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { ThemeSwitchModule } from '../theme-switch/theme-switch.module';
+import { BookService } from 'src/app/services/book/book.service';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -14,5 +15,6 @@ import { ThemeSwitchModule } from '../theme-switch/theme-switch.module';
     AngularMaterialModule,
     ThemeSwitchModule,
   ],
+  providers: [BookService],
 })
 export class HomeModule {}
