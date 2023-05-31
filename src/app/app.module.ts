@@ -1,3 +1,4 @@
+import { ThemeService } from './services/theme/theme.service';
 import { NgModule } from '@angular/core';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
@@ -21,7 +22,7 @@ import { UserService } from './services/user/user.service';
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
   ],
-  providers: [AuthenticationService, UserService],
+  providers: [AuthenticationService, UserService, ThemeService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -4,7 +4,6 @@ import {
   CollectionReference,
   doc,
   DocumentReference,
-  DocumentSnapshot,
   Firestore,
   getDoc,
   getDocs,
@@ -48,21 +47,36 @@ export class UserService {
     return users;
   }
 
+  async getUser(userId: string): Promise<Partial<User> | null> {
+    const docRef = doc(this.firestore, 'users', userId);
+    const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) return null;
+    return docSnap.data();
+  }
+
   async addUser(user: User): Promise<void> {
     const firestoreUser: Partial<User> = Object.assign({}, user);
     delete firestoreUser.password;
     const docRef: DocumentReference<Partial<User>> = doc(
       this.firestore,
       'users',
-      firestoreUser.email!
+      firestoreUser.id!
     ) as DocumentReference<Partial<User>>;
-    const docSnap: DocumentSnapshot<Partial<User>> = await getDoc(docRef);
 
-    if (docSnap.exists()) {
+    if (await this.emailAlreadyExists(firestoreUser.email!)) {
       throw new UserAlreadyExistsError();
     }
 
     await setDoc(docRef, firestoreUser);
+  }
+
+  async emailAlreadyExists(email: string): Promise<boolean> {
+    const dbInstance = this.getDBInstance();
+    const emailQuerySnap = await getDocs(
+      query(dbInstance, where('email', '==', email))
+    );
+    if (!emailQuerySnap.size) return false;
+    return true;
   }
 
   private getDBInstance(): CollectionReference<Partial<User>> {

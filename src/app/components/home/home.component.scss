@@ -1,0 +1,43 @@
+.navbar {
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 5px rgba($color: #000, $alpha: 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+
+  .title {
+    font-weight: 700;
+    margin-left: 2.2rem;
+  }
+
+  .theme-switch {
+    position: relative;
+    right: 35dvw;
+    top: 3px;
+  }
+
+  figure {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+
+    img {
+      width: 30px;
+      color: white;
+    }
+
+    figcaption {
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      &::first-letter {
+        text-transform: uppercase;
+      }
+    }
+  }
+}

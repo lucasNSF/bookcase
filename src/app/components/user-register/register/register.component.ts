@@ -64,7 +64,7 @@ export class RegisterComponent implements OnInit {
       this.logService.showSuccessLog('Cadastro concluído!');
       this.resetForm();
       this.addFormValidators();
-      this.router.navigate(['/', 'home']);
+      this.router.navigate(['/', 'home'], { replaceUrl: true });
     } catch (err) {
       const log = this.validationService.handleFirebaseError(
         err as FirebaseError
