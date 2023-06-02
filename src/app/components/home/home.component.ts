@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
+import { Volume } from 'src/app/models/interfaces/Volume';
+import { VolumeCollection } from 'src/app/models/interfaces/VolumeCollection';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
-import { BookService } from 'src/app/services/book/book.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 
 @Component({
@@ -13,12 +14,12 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 export class HomeComponent implements OnInit, OnDestroy {
   user: Partial<User> | null = null;
   isDark!: boolean;
+  receivedBooks!: Volume[];
   private subscriptions: Subscription[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
-    private themeService: ThemeService,
-    private bookService: BookService
+    private themeService: ThemeService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -33,5 +34,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  handleBooks(books: VolumeCollection): void {
+    console.log(books);
+    this.receivedBooks = books.items;
   }
 }

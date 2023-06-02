@@ -1,0 +1,12 @@
+<ng-container *ngFor="let book of books">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
+        <mat-card-subtitle>{{
+          book.volumeInfo.authors.join(', ')
+        }}</mat-card-subtitle>
+      </mat-card-title-group>
+    </mat-card-header>
+  </mat-card>
+</ng-container>

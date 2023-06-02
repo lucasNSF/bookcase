@@ -1,1 +1,15 @@
-<p>search-books works!</p>
+<section appearance="outline" class="search-container">
+  <mat-icon
+    class="search-icon"
+    [ngClass]="{ lightIcon: !isDark }"
+    (click)="inputActions['Enter']()"
+    >search</mat-icon
+  >
+  <input
+    type="text"
+    placeholder="Encontre o que você procura!"
+    class="search-input"
+    [ngClass]="{ lightInput: !isDark }"
+    (keyup)="onKeyUp($event)"
+    #searchBtn />
+</section>

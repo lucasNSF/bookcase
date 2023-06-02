@@ -16,3 +16,6 @@
     </figure>
   </div>
 </mat-toolbar>
+
+<app-search-books (searchEvent)="handleBooks($event)"></app-search-books>
+<app-search-results [books]="receivedBooks"></app-search-results>

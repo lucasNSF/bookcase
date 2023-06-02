@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Volume } from 'src/app/models/interfaces/Volume';
+import { VolumeCollection } from 'src/app/models/interfaces/VolumeCollection';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -14,8 +14,8 @@ export class BookService {
 
   constructor(private http: HttpClient) {}
 
-  getBooksByName(title: string): Observable<Volume> {
-    return this.http.get<Volume>(
+  getBooksByName(title: string): Observable<VolumeCollection> {
+    return this.http.get<VolumeCollection>(
       `${this.API_URL}/volumes?q=${title}&${this.SEARCH_PARAM}&key=${this.API_KEY}`
     );
   }
