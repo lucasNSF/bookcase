@@ -6,9 +6,10 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { ThemeSwitchModule } from '../theme-switch/theme-switch.module';
 import { BookService } from 'src/app/services/book/book.service';
+import { SearchBooksComponent } from './search-books/search-books.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, SearchBooksComponent],
   imports: [
     CommonModule,
     HomeRoutingModule,
