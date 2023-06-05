@@ -28,6 +28,14 @@
   .color-accent {
     color: mat.get-color-from-palette($accent-palette);
   }
+
+  .focus-primary {
+    &:focus,
+    &:hover {
+      border: 2px solid mat.get-color-from-palette($primary-palette);
+      cursor: pointer;
+    }
+  }
 }
 
 $app-dark-primary: mat.define-palette(mat.$pink-palette);
@@ -108,15 +116,18 @@ body {
   color: #fff;
 }
 
+.register-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
 .form-container {
   width: 60%;
   padding: 1.5rem;
   padding-top: 4rem;
   padding-bottom: 0.5rem;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 
   .title {
     padding: 0;

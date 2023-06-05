@@ -56,6 +56,7 @@ export class UserService {
 
   async addUser(user: User): Promise<void> {
     const firestoreUser: Partial<User> = Object.assign({}, user);
+    firestoreUser.books = [];
     delete firestoreUser.password;
     const docRef: DocumentReference<Partial<User>> = doc(
       this.firestore,
