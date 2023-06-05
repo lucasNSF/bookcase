@@ -7,6 +7,7 @@
   align-items: center;
   position: sticky;
   top: 0;
+  z-index: 5;
 
   .title {
     font-weight: 700;
@@ -45,5 +46,14 @@
 app-search-books {
   display: flex;
   justify-content: center;
+  margin-top: 3rem;
+}
+
+app-search-results {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   margin-top: 3rem;
 }

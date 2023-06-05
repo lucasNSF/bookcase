@@ -1,12 +1,33 @@
-<ng-container *ngFor="let book of books">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title-group>
-        <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
-        <mat-card-subtitle>{{
-          book.volumeInfo.authors.join(', ')
-        }}</mat-card-subtitle>
-      </mat-card-title-group>
-    </mat-card-header>
-  </mat-card>
+<ng-container *ngIf="books">
+  <ng-container *ngFor="let book of getVolumesInfo()">
+    <mat-card class="book" tabindex="0">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-title class="title">{{ book.title }}</mat-card-title>
+          <mat-card-subtitle *ngIf="book.authors" class="authors">{{
+            book.authors.join(', ')
+          }}</mat-card-subtitle>
+        </mat-card-title-group>
+      </mat-card-header>
+      <mat-card-content class="thumbnail-container">
+        <img
+          [src]="
+            book.imageLinks
+              ? book.imageLinks.thumbnail ||
+                book.imageLinks.smallThumbnail ||
+                book.imageLinks.small
+              : 'assets/images/empty-book.png'
+          "
+          alt="capa do livro {{ book.title }}" />
+      </mat-card-content>
+      <mat-card-footer class="language">
+        <span>{{ book.language }}</span>
+      </mat-card-footer>
+      <mat-card-actions class="actions">
+        <mat-icon class="color-primary">favorite_border</mat-icon>
+        <mat-icon class="color-primary">stars</mat-icon>
+        <span>{{ book.averageRating ? book.averageRating : 0 }}</span>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
 </ng-container>

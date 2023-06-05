@@ -60,6 +60,7 @@ $app-light-theme: mat.define-light-theme(
 @include mat.form-field-theme($app-light-theme);
 @include mat.input-theme($app-light-theme);
 @include mat.progress-spinner-theme($app-light-theme);
+@include mat.progress-bar-theme($app-light-theme);
 @include color($app-light-theme);
 
 .dark-theme {
@@ -69,6 +70,7 @@ $app-light-theme: mat.define-light-theme(
   @include mat.form-field-color($app-dark-theme);
   @include mat.input-color($app-dark-theme);
   @include mat.progress-spinner-color($app-dark-theme);
+  @include mat.progress-bar-color($app-dark-theme);
   @include color($app-dark-theme);
 
   background: radial-gradient(
@@ -83,12 +85,9 @@ $app-light-theme: mat.define-light-theme(
   background-size: cover;
 }
 
-html,
-body {
-  height: 100%;
-}
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   background: url('assets/images/background.jpg');
   background-position: center;

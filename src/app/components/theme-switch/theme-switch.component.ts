@@ -1,11 +1,14 @@
 import { Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/services/theme/theme.service';
+import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
 
 @Component({
   selector: 'app-theme-switch',
   templateUrl: './theme-switch.component.html',
   styleUrls: ['./theme-switch.component.scss'],
+  standalone: true,
+  imports: [AngularMaterialModule],
 })
 export class ThemeSwitchComponent implements OnInit, OnDestroy {
   isDark!: boolean;
