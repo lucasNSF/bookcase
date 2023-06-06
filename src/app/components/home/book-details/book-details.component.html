@@ -1,0 +1,59 @@
+<ng-template #loadContainer></ng-template>
+
+<app-toolbar></app-toolbar>
+
+<div class="container">
+  <mat-card class="book-details">
+    <section class="book-presentation">
+      <div>
+        <img
+          [src]="
+            book?.volumeInfo?.imageLinks
+              ? book?.volumeInfo?.imageLinks?.large ||
+                book?.volumeInfo?.imageLinks?.medium ||
+                book?.volumeInfo?.imageLinks?.small ||
+                book?.volumeInfo?.imageLinks?.thumbnail
+              : 'assets/images/empty-book.png'
+          "
+          alt="capa do livro {{ book?.volumeInfo?.title }}" />
+      </div>
+      <main>
+        <mat-card-header class="title-info">
+          <mat-card-title class="title">{{
+            book?.volumeInfo?.title
+          }}</mat-card-title>
+          <mat-card-subtitle class="authors">{{
+            book?.volumeInfo?.authors?.join(', ')
+          }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p class="description">{{ book?.volumeInfo?.description }}</p>
+        </mat-card-content>
+        <section class="book-actions">
+          <mat-card-actions>
+            <div *ngIf="book?.saleInfo?.retailPrice" class="buy-container">
+              <p class="price">$ {{ book?.saleInfo?.retailPrice?.amount }}</p>
+              <button class="buy" mat-raised-button color="primary">
+                Comprar
+              </button>
+            </div>
+          </mat-card-actions>
+          <mat-card-footer>
+            <div class="info count-pages">
+              <mat-icon matTooltip="Quantidade de páginas">book</mat-icon>
+              <p>{{ book?.volumeInfo?.pageCount }}</p>
+            </div>
+            <div class="info language">
+              <mat-icon matTooltip="Idioma">language</mat-icon>
+              <p>{{ book?.volumeInfo?.language }}</p>
+            </div>
+            <div *ngIf="book?.volumeInfo?.categories" class="info category">
+              <mat-icon matTooltip="Categoria">category</mat-icon>
+              <p>{{ book?.volumeInfo?.categories?.[0] }}</p>
+            </div>
+          </mat-card-footer>
+        </section>
+      </main>
+    </section>
+  </mat-card>
+</div>

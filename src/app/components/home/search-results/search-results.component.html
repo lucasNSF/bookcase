@@ -1,32 +1,39 @@
 <ng-container *ngIf="books">
-  <ng-container *ngFor="let book of getVolumesInfo()">
-    <mat-card class="book focus-primary" tabindex="0">
+  <ng-container *ngFor="let book of books">
+    <mat-card
+      class="book focus-primary"
+      tabindex="0"
+      (click)="openBookPage(book)">
       <mat-card-header>
         <mat-card-title-group>
-          <mat-card-title class="title">{{ book.title }}</mat-card-title>
-          <mat-card-subtitle *ngIf="book.authors" class="authors">{{
-            book.authors.join(', ')
+          <mat-card-title class="title">{{
+            book.volumeInfo.title
+          }}</mat-card-title>
+          <mat-card-subtitle *ngIf="book.volumeInfo.authors" class="authors">{{
+            book.volumeInfo.authors.join(', ')
           }}</mat-card-subtitle>
         </mat-card-title-group>
       </mat-card-header>
       <mat-card-content class="thumbnail-container">
         <img
           [src]="
-            book.imageLinks
-              ? book.imageLinks.thumbnail ||
-                book.imageLinks.smallThumbnail ||
-                book.imageLinks.small
+            book.volumeInfo.imageLinks
+              ? book.volumeInfo.imageLinks.thumbnail ||
+                book.volumeInfo.imageLinks.smallThumbnail ||
+                book.volumeInfo.imageLinks.small
               : 'assets/images/empty-book.png'
           "
-          alt="capa do livro {{ book.title }}" />
+          alt="capa do livro {{ book.volumeInfo.title }}" />
       </mat-card-content>
       <mat-card-footer class="language">
-        <span>{{ book.language }}</span>
+        <span>{{ book.volumeInfo.language }}</span>
       </mat-card-footer>
       <mat-card-actions class="actions">
         <mat-icon class="color-primary">favorite_border</mat-icon>
         <mat-icon class="color-primary">stars</mat-icon>
-        <span>{{ book.averageRating ? book.averageRating : 0 }}</span>
+        <span>{{
+          book.volumeInfo.averageRating ? book.volumeInfo.averageRating : 0
+        }}</span>
       </mat-card-actions>
     </mat-card>
   </ng-container>

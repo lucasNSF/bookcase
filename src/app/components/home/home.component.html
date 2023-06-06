@@ -1,21 +1,3 @@
-<mat-toolbar class="navbar">
-  <span class="title">Bookcase</span>
-
-  <app-theme-switch class="theme-switch"></app-theme-switch>
-
-  <div class="user-profile">
-    <figure>
-      <img
-        [src]="
-          isDark
-            ? 'assets/images/profile-dark.png'
-            : 'assets/images/profile.png'
-        "
-        alt="imagem do usuário com moldura hexagonal" />
-      <figcaption>{{ user?.name }}</figcaption>
-    </figure>
-  </div>
-</mat-toolbar>
-
+<app-toolbar></app-toolbar>
 <app-search-books (searchEvent)="handleBooks($event)"></app-search-books>
 <app-search-results [books]="receivedBooks"></app-search-results>

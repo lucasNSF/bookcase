@@ -9,14 +9,22 @@ import { HomeComponent } from './home.component';
 import { SearchBooksComponent } from './search-books/search-books.component';
 import { SearchResultsComponent } from './search-results/search-results.component';
 import { LoadService } from 'src/app/services/load/load.service';
+import { BookDetailsComponent } from './book-details/book-details.component';
+import { ToolbarComponent } from '../toolbar/toolbar.component';
 
 @NgModule({
-  declarations: [HomeComponent, SearchBooksComponent, SearchResultsComponent],
+  declarations: [
+    HomeComponent,
+    SearchBooksComponent,
+    SearchResultsComponent,
+    BookDetailsComponent,
+  ],
   imports: [
     CommonModule,
     HomeRoutingModule,
     AngularMaterialModule,
     ThemeSwitchComponent,
+    ToolbarComponent,
   ],
   providers: [BookService, LoadService],
 })

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Book } from 'src/app/models/interfaces/Book';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Volume } from 'src/app/models/interfaces/Volume';
 
 @Component({
@@ -8,12 +8,11 @@ import { Volume } from 'src/app/models/interfaces/Volume';
   styleUrls: ['./search-results.component.scss'],
 })
 export class SearchResultsComponent {
+  constructor(private router: Router, private route: ActivatedRoute) {}
+
   @Input() books: Volume[] | null = null;
 
-  getVolumesInfo(): Book[] | null {
-    if (this.books) {
-      return this.books.map(vol => vol.volumeInfo);
-    }
-    return null;
+  openBookPage(book: Volume): void {
+    this.router.navigate(['book', book.id], { relativeTo: this.route });
   }
 }
