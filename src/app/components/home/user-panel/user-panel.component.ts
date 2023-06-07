@@ -17,6 +17,7 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ValidationService } from 'src/app/services/validation/validation.service';
+import { changeProfilePhoto } from 'src/app/shared/utils/changeProfilePhoto';
 
 @Component({
   selector: 'app-user-panel',
@@ -87,7 +88,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
       async () => {
         this.loadService.closeLoadBar(this.loadContainer);
         const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-        await this.userService.updateUser(this.user?.id as string, {
+        this.userService.updateUser(this.user?.id as string, {
           profilePhoto: downloadUrl,
         });
         this.logService.showSuccessLog('Imagem de perfil atualizada!');
@@ -95,25 +96,35 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     );
   }
 
-  private async checkUserIdentity(): Promise<void> {
-    const user = await this.authenticationService.getUserInstance();
-    if (!user) {
-      this.logService.showErrorLog('Ocorreu um erro, faça login novamente!');
-      this.authenticationService.removeUserInstance();
-      this.router.navigate(['login'], { replaceUrl: true });
-    }
+  chooseProfilePhoto(): string {
+    return changeProfilePhoto(this.user, this.isDark);
+  }
 
-    const userSub = this.route.params.subscribe(params => {
-      const userId: string = params['id'];
-      if (userId !== user?.id) {
-        this.logService.showErrorLog('Acesso negado!');
-        this.authenticationService.removeUserInstance();
-        this.router.navigate(['login'], { replaceUrl: true });
-      } else {
-        this.user = user;
-      }
-    });
+  private checkUserIdentity(): void {
+    const authSub = this.authenticationService
+      .getUserInstance()
+      .subscribe(user => {
+        if (!user) {
+          this.logService.showErrorLog(
+            'Ocorreu um erro, faça login novamente!'
+          );
+          this.authenticationService.removeUserInstance();
+          this.router.navigate(['login'], { replaceUrl: true });
+        }
 
-    this.subscriptions.push(userSub);
+        const userSub = this.route.params.subscribe(params => {
+          const userId: string = params['id'];
+          if (userId !== user?.id) {
+            this.logService.showErrorLog('Acesso negado!');
+            this.authenticationService.removeUserInstance();
+            this.router.navigate(['login'], { replaceUrl: true });
+          } else {
+            this.user = user;
+          }
+        });
+
+        this.subscriptions.push(userSub);
+      });
+    this.subscriptions.push(authSub);
   }
 }

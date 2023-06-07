@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
 import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
+import { changeProfilePhoto } from 'src/app/shared/utils/changeProfilePhoto';
 
 @Component({
   selector: 'app-toolbar',
@@ -17,7 +18,7 @@ import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
 export class ToolbarComponent implements OnInit, OnDestroy {
   user: Partial<User> | null = null;
   isDark!: boolean;
-  private subscription!: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private authenticationService: AuthenticationService,
@@ -25,19 +26,27 @@ export class ToolbarComponent implements OnInit, OnDestroy {
     private router: Router
   ) {}
 
-  async ngOnInit(): Promise<void> {
-    this.user = await this.authenticationService.getUserInstance();
+  ngOnInit(): void {
+    const userSub = this.authenticationService
+      .getUserInstance()
+      .subscribe(userInstance => (this.user = userInstance));
+    this.subscriptions.push(userSub);
 
-    this.subscription = this.themeService
+    const themeSub = this.themeService
       .getTheme()
       .subscribe(theme => (this.isDark = theme));
+    this.subscriptions.push(themeSub);
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   goToUserPanel(): void {
     this.router.navigate(['/home/user', this.user?.id]);
+  }
+
+  chooseProfilePhoto(): string {
+    return changeProfilePhoto(this.user, this.isDark);
   }
 }

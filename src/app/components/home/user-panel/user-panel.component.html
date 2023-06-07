@@ -10,11 +10,7 @@
     <label for="fileInput" class="profile-label">
       <img
         class="profile-image"
-        [src]="
-          isDark
-            ? 'assets/images/profile-dark.png'
-            : 'assets/images/profile.png'
-        "
+        [src]="chooseProfilePhoto()"
         alt="foto de perfil com moldura hexagonal" />
       <input
         id="fileInput"

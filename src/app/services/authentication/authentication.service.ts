@@ -8,21 +8,22 @@ import {
 import { User } from 'src/app/models/interfaces/User';
 
 import { UserService } from '../user/user.service';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  constructor(private auth: Auth, private UserService: UserService) {}
+  constructor(private auth: Auth, private userService: UserService) {}
 
   setUserInstance(credential: UserCredential): void {
     localStorage.setItem('userId', credential.user.uid);
   }
 
-  async getUserInstance(): Promise<Partial<User> | null> {
+  getUserInstance(): Observable<Partial<User> | null> {
     const userId = localStorage.getItem('userId');
-    if (!userId) return null;
-    return await this.UserService.getUser(userId);
+    if (!userId) return of(null);
+    return this.userService.getUser(userId);
   }
 
   removeUserInstance(): void {

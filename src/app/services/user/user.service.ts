@@ -1,21 +1,19 @@
 import { Injectable } from '@angular/core';
 import {
-  collection,
   CollectionReference,
-  deleteDoc,
-  doc,
   DocumentReference,
   Firestore,
+  collection,
+  deleteDoc,
+  doc,
   getDoc,
   getDocs,
   query,
-  Query,
-  QueryDocumentSnapshot,
-  QuerySnapshot,
   setDoc,
   updateDoc,
   where,
 } from '@angular/fire/firestore';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserAlreadyExistsError } from 'src/app/models/errors/UserAlreadyExistsError';
 import { User } from 'src/app/models/interfaces/User';
 
@@ -23,22 +21,31 @@ import { User } from 'src/app/models/interfaces/User';
   providedIn: 'root',
 })
 export class UserService {
+  private userSubject = new BehaviorSubject<Partial<User> | null>(null);
+
   constructor(private firestore: Firestore) {}
 
-  async getUser(userId: string): Promise<Partial<User> | null> {
+  getUser(userId: string): Observable<Partial<User> | null> {
     const docRef = doc(this.firestore, 'users', userId);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) return null;
-    return docSnap.data();
+    getDoc(docRef).then(docSnap => {
+      if (!docSnap.exists()) {
+        this.userSubject.next(null);
+      } else {
+        this.userSubject.next(docSnap.data());
+      }
+    });
+    return this.userSubject.asObservable();
   }
 
-  updateUser(userId: string, updatedPaths: Partial<User>): Promise<void> {
+  updateUser(userId: string, updatedPaths: Partial<User>) {
     const userRef = doc(this.firestore, 'users', userId);
-    return updateDoc(userRef, updatedPaths);
+    updateDoc(userRef, updatedPaths);
+    const updatedUser = { ...(this.userSubject.value || {}), ...updatedPaths };
+    this.userSubject.next(updatedUser);
   }
 
-  deleteUser(userId: string): Promise<void> {
-    return deleteDoc(doc(this.firestore, 'users', userId));
+  async deleteUser(userId: string): Promise<void> {
+    await deleteDoc(doc(this.firestore, 'users', userId));
   }
 
   async addUser(user: User): Promise<void> {

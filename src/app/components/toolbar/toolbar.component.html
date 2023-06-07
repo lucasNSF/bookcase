@@ -6,11 +6,7 @@
   <div class="user-profile">
     <figure>
       <img
-        [src]="
-          isDark
-            ? 'assets/images/profile-dark.png'
-            : 'assets/images/profile.png'
-        "
+        [src]="chooseProfilePhoto()"
         alt="imagem do usuário com moldura hexagonal" />
       <figcaption (click)="goToUserPanel()">{{ user?.name }}</figcaption>
     </figure>

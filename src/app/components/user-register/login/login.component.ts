@@ -1,8 +1,15 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { FirebaseError } from 'firebase/app';
+import { Subscription } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
 import { EmailValidation } from 'src/app/models/validators/EmailValidation';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -14,10 +21,11 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent implements AfterViewInit, OnInit {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   isRegistering = false;
   form!: FormGroup;
   @ViewChild('loginBtn') loginBtn!: MatButton;
+  private subscription!: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,14 +40,17 @@ export class LoginComponent implements AfterViewInit, OnInit {
     });
   }
 
-  async ngOnInit(): Promise<void> {
-    const userInstance = await this.authenticationService.getUserInstance();
-    if (userInstance) {
-      this.router.navigate(['/', 'home'], { replaceUrl: true });
-      this.logService.showSuccessLog(
-        `Continuando como ${userInstance.name}...`
-      );
-    }
+  ngOnInit(): void {
+    this.subscription = this.authenticationService
+      .getUserInstance()
+      .subscribe(userInstance => {
+        if (userInstance) {
+          this.router.navigate(['/', 'home'], { replaceUrl: true });
+          this.logService.showSuccessLog(
+            `Continuando como ${userInstance.name}...`
+          );
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -47,6 +58,10 @@ export class LoginComponent implements AfterViewInit, OnInit {
       this.form.get('email')!,
       new EmailValidation()
     );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   async login(): Promise<void> {
