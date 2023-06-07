@@ -1,4 +1,4 @@
-<ng-container #loadContainer></ng-container>
+<ng-template #loadContainer></ng-template>
 
 <mat-card class="panel-container">
   <mat-card-actions class="panel-actions">
@@ -8,10 +8,14 @@
 
   <div class="user-panel">
     <label for="fileInput" class="profile-label">
-      <img
-        class="profile-image"
-        [src]="chooseProfilePhoto()"
-        alt="foto de perfil com moldura hexagonal" />
+      <div class="image-container">
+        <img
+          appUpdateProfilePhoto
+          [isDark]="isDark"
+          [pathImage]="user?.profilePhoto"
+          class="profile-image"
+          alt="foto de perfil com moldura circular" />
+      </div>
       <input
         id="fileInput"
         type="file"

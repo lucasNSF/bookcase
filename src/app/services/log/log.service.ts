@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   MatSnackBar,
   MatSnackBarHorizontalPosition,
+  MatSnackBarVerticalPosition,
 } from '@angular/material/snack-bar';
 import { LogInfoComponent } from 'src/app/components/log-info/log-info.component';
 import { LogData } from 'src/app/models/interfaces/LogData';
@@ -13,9 +14,11 @@ export class LogService {
   private logConfig: {
     duration: number;
     horizontalPosition: MatSnackBarHorizontalPosition;
+    verticalPosition: MatSnackBarVerticalPosition;
   } = {
     duration: 1500,
     horizontalPosition: 'start',
+    verticalPosition: 'bottom',
   };
 
   constructor(private snackBar: MatSnackBar) {}

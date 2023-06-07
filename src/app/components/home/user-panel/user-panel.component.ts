@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   OnDestroy,
@@ -17,14 +18,13 @@ import { StorageService } from 'src/app/services/storage/storage.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { ValidationService } from 'src/app/services/validation/validation.service';
-import { changeProfilePhoto } from 'src/app/shared/utils/changeProfilePhoto';
 
 @Component({
   selector: 'app-user-panel',
   templateUrl: './user-panel.component.html',
   styleUrls: ['./user-panel.component.scss'],
 })
-export class UserPanelComponent implements OnInit, OnDestroy {
+export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   isDark!: boolean;
   user: Partial<User> | null = null;
   @ViewChild('loadContainer', { read: ViewContainerRef })
@@ -52,6 +52,12 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this.subscriptions.push(themeSub);
   }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.loadService.closeLoadBar(this.loadContainer);
+    }, 2000);
+  }
+
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
@@ -76,7 +82,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
       snapshot => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        componentRef.setInput('value', progress);
+        componentRef.setInput('progressValue', progress);
         this.changeDetectorRef.detectChanges();
       },
       error => {
@@ -86,24 +92,21 @@ export class UserPanelComponent implements OnInit, OnDestroy {
         this.logService.showErrorLog(message);
       },
       async () => {
-        this.loadService.closeLoadBar(this.loadContainer);
+        this.logService.showSuccessLog('Imagem de perfil atualizada!');
         const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
         this.userService.updateUser(this.user?.id as string, {
           profilePhoto: downloadUrl,
         });
-        this.logService.showSuccessLog('Imagem de perfil atualizada!');
+        this.loadService.closeLoadBar(this.loadContainer);
       }
     );
-  }
-
-  chooseProfilePhoto(): string {
-    return changeProfilePhoto(this.user, this.isDark);
   }
 
   private checkUserIdentity(): void {
     const authSub = this.authenticationService
       .getUserInstance()
       .subscribe(user => {
+        this.loadService.addLoadBar(this.loadContainer);
         if (!user) {
           this.logService.showErrorLog(
             'Ocorreu um erro, faça login novamente!'

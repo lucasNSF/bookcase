@@ -5,9 +5,13 @@
 
   <div class="user-profile">
     <figure>
-      <img
-        [src]="chooseProfilePhoto()"
-        alt="imagem do usuário com moldura hexagonal" />
+      <div class="image-container">
+        <img
+          appUpdateProfilePhoto
+          [isDark]="isDark"
+          [pathImage]="user?.profilePhoto"
+          alt="imagem do usuário com moldura hexagonal" />
+      </div>
       <figcaption (click)="goToUserPanel()">{{ user?.name }}</figcaption>
     </figure>
   </div>

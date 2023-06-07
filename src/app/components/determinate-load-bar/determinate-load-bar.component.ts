@@ -5,11 +5,11 @@ import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-m
   selector: 'app-determinate-load-bar',
   template: `<mat-progress-bar
     mode="determinate"
-    [value]="value"></mat-progress-bar>`,
+    [value]="progressValue"></mat-progress-bar>`,
   styleUrls: ['./determinate-load-bar.component.scss'],
   standalone: true,
   imports: [AngularMaterialModule],
 })
 export class DeterminateLoadBarComponent {
-  @Input() value = 0;
+  @Input() progressValue = 0;
 }

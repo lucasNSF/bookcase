@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import {
-  CollectionReference,
-  DocumentReference,
-  Firestore,
   collection,
+  CollectionReference,
   deleteDoc,
   doc,
+  DocumentReference,
+  Firestore,
   getDoc,
   getDocs,
   query,
@@ -13,7 +13,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, defer, switchMap } from 'rxjs';
 import { UserAlreadyExistsError } from 'src/app/models/errors/UserAlreadyExistsError';
 import { User } from 'src/app/models/interfaces/User';
 
@@ -25,16 +25,15 @@ export class UserService {
 
   constructor(private firestore: Firestore) {}
 
-  getUser(userId: string): Observable<Partial<User> | null> {
+  getUser(userId: string) {
     const docRef = doc(this.firestore, 'users', userId);
-    getDoc(docRef).then(docSnap => {
+    return defer(async () => {
+      const docSnap = await getDoc(docRef);
       if (!docSnap.exists()) {
         this.userSubject.next(null);
-      } else {
-        this.userSubject.next(docSnap.data());
       }
-    });
-    return this.userSubject.asObservable();
+      this.userSubject.next(docSnap.data() as Partial<User>);
+    }).pipe(switchMap(() => this.userSubject.asObservable()));
   }
 
   updateUser(userId: string, updatedPaths: Partial<User>) {

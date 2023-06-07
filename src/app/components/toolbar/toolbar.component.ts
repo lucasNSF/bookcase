@@ -6,14 +6,14 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
 import { ThemeService } from 'src/app/services/theme/theme.service';
 import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
 import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
-import { changeProfilePhoto } from 'src/app/shared/utils/changeProfilePhoto';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @Component({
   selector: 'app-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
   standalone: true,
-  imports: [AngularMaterialModule, ThemeSwitchComponent],
+  imports: [AngularMaterialModule, ThemeSwitchComponent, SharedModule],
 })
 export class ToolbarComponent implements OnInit, OnDestroy {
   user: Partial<User> | null = null;
@@ -44,9 +44,5 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   goToUserPanel(): void {
     this.router.navigate(['/home/user', this.user?.id]);
-  }
-
-  chooseProfilePhoto(): string {
-    return changeProfilePhoto(this.user, this.isDark);
   }
 }
