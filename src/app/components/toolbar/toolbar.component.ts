@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
-import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
-import { Subscription } from 'rxjs';
+import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
+import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -20,7 +21,8 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private router: Router
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -33,5 +35,9 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  goToUserPanel(): void {
+    this.router.navigate(['/home/user', this.user?.id]);
   }
 }

@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChangePasswordVisibilityDirective } from './directives/change-password-visibility.directive';
+import { NgModule } from '@angular/core';
+import { ChangePasswordVisibilityDirective } from './directives/change-password-visibility/change-password-visibility.directive';
 import { FormDebugComponent } from './form-debug/form-debug.component';
 
 @NgModule({

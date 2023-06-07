@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   collection,
   CollectionReference,
+  deleteDoc,
   doc,
   DocumentReference,
   Firestore,
@@ -12,6 +13,7 @@ import {
   QueryDocumentSnapshot,
   QuerySnapshot,
   setDoc,
+  updateDoc,
   where,
 } from '@angular/fire/firestore';
 import { UserAlreadyExistsError } from 'src/app/models/errors/UserAlreadyExistsError';
@@ -23,30 +25,6 @@ import { User } from 'src/app/models/interfaces/User';
 export class UserService {
   constructor(private firestore: Firestore) {}
 
-  async getUsers(): Promise<Partial<User>[]> {
-    const users: Partial<User>[] = [];
-    const dbInstance = this.getDBInstance();
-    const querySnapshot: QuerySnapshot<Partial<User>> = await getDocs(
-      dbInstance
-    );
-    querySnapshot.forEach((document: QueryDocumentSnapshot<Partial<User>>) =>
-      users.push(document.data())
-    );
-    return users;
-  }
-
-  async getUsersByName(name: string): Promise<Partial<User>[]> {
-    const users: Partial<User>[] = [];
-    const dbInstance = this.getDBInstance();
-    const usersQuery: Query<Partial<User>> = query(
-      dbInstance,
-      where('name', '==', name)
-    );
-    const querySnapshot = await getDocs(usersQuery);
-    querySnapshot.forEach(document => users.push(document.data()));
-    return users;
-  }
-
   async getUser(userId: string): Promise<Partial<User> | null> {
     const docRef = doc(this.firestore, 'users', userId);
     const docSnap = await getDoc(docRef);
@@ -54,9 +32,19 @@ export class UserService {
     return docSnap.data();
   }
 
+  updateUser(userId: string, updatedPaths: Partial<User>): Promise<void> {
+    const userRef = doc(this.firestore, 'users', userId);
+    return updateDoc(userRef, updatedPaths);
+  }
+
+  deleteUser(userId: string): Promise<void> {
+    return deleteDoc(doc(this.firestore, 'users', userId));
+  }
+
   async addUser(user: User): Promise<void> {
     const firestoreUser: Partial<User> = Object.assign({}, user);
     firestoreUser.books = [];
+    firestoreUser.profilePhoto = '';
     delete firestoreUser.password;
     const docRef: DocumentReference<Partial<User>> = doc(
       this.firestore,

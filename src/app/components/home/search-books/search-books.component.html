@@ -11,6 +11,7 @@
     class="search-input"
     [ngClass]="{ lightInput: !isDark }"
     (keyup)="onKeyUp($event)"
+    [value]="inputValue"
     #searchBtn />
 </section>
 

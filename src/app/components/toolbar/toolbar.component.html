@@ -12,7 +12,7 @@
             : 'assets/images/profile.png'
         "
         alt="imagem do usuário com moldura hexagonal" />
-      <figcaption>{{ user?.name }}</figcaption>
+      <figcaption (click)="goToUserPanel()">{{ user?.name }}</figcaption>
     </figure>
   </div>
 </mat-toolbar>

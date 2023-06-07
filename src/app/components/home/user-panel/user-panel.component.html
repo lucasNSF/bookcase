@@ -1,0 +1,38 @@
+<ng-container #loadContainer></ng-container>
+
+<mat-card class="panel-container">
+  <mat-card-actions class="panel-actions">
+    <app-theme-switch></app-theme-switch>
+    <mat-icon class="close-btn" (click)="closePage()">close</mat-icon>
+  </mat-card-actions>
+
+  <div class="user-panel">
+    <label for="fileInput" class="profile-label">
+      <img
+        class="profile-image"
+        [src]="
+          isDark
+            ? 'assets/images/profile-dark.png'
+            : 'assets/images/profile.png'
+        "
+        alt="foto de perfil com moldura hexagonal" />
+      <input
+        id="fileInput"
+        type="file"
+        accept="image/*"
+        (change)="onFileSelected($event)" />
+    </label>
+
+    <div class="user-info">
+      <p class="name">{{ user?.name }}</p>
+      <p class="email">{{ user?.email }}</p>
+      <button class="edit" mat-flat-button color="accent">Editar dados</button>
+    </div>
+  </div>
+  <div class="user-books">
+    <h1>Seus livros favoritados:</h1>
+    <ng-container>
+      <!-- Livros favoritados -->
+    </ng-container>
+  </div>
+</mat-card>

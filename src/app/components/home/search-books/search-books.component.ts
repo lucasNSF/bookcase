@@ -2,12 +2,14 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { VolumeCollection } from 'src/app/models/interfaces/VolumeCollection';
 import { BookService } from 'src/app/services/book/book.service';
@@ -21,6 +23,7 @@ import { ThemeService } from 'src/app/services/theme/theme.service';
 })
 export class SearchBooksComponent implements OnInit, OnDestroy {
   isDark = true;
+  @Input() inputValue = '';
   @ViewChild('searchBtn') searchBtn!: ElementRef<HTMLInputElement>;
   @ViewChild('loadContainer', { read: ViewContainerRef })
   loadContainer!: ViewContainerRef;
@@ -38,6 +41,7 @@ export class SearchBooksComponent implements OnInit, OnDestroy {
           .getBooksByName(query)
           .subscribe(vol => {
             this.searchEvent.emit(vol);
+            this.router.navigate(['/home'], { queryParams: { q: query } });
             this.loadService.closeLoadBar(this.loadContainer);
           });
         this.subscriptions.push(subscription);
@@ -50,7 +54,8 @@ export class SearchBooksComponent implements OnInit, OnDestroy {
   constructor(
     private themeService: ThemeService,
     private bookService: BookService,
-    private loadService: LoadService
+    private loadService: LoadService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {

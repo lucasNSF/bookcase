@@ -1,14 +1,19 @@
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
+import { StorageError } from '@angular/fire/storage';
 import { AbstractControl } from '@angular/forms';
 import { FirebaseErrorCode } from 'src/app/models/enums/FirebaseErrorCode';
+import { StorageErrorCode } from 'src/app/models/enums/StorageErrorCode';
 import { ValidationStrategy } from 'src/app/models/interfaces/ValidationStrategy';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ValidationService {
-  private enums: Record<string, unknown>[] = [FirebaseErrorCode];
+  private enums: Record<string, unknown>[] = [
+    FirebaseErrorCode,
+    StorageErrorCode,
+  ];
   private errorMap = new Map<string, unknown>();
 
   constructor() {
@@ -27,6 +32,11 @@ export class ValidationService {
   }
 
   handleFirebaseError(error: FirebaseError): string {
+    const message = this.errorMap.get(error.code) as string;
+    return message;
+  }
+
+  handleStorageError(error: StorageError): string {
     const message = this.errorMap.get(error.code) as string;
     return message;
   }
