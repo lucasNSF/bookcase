@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
+  arrayRemove,
+  arrayUnion,
   collection,
   CollectionReference,
   deleteDoc,
@@ -16,6 +18,7 @@ import {
 import { BehaviorSubject, defer, switchMap } from 'rxjs';
 import { UserAlreadyExistsError } from 'src/app/models/errors/UserAlreadyExistsError';
 import { User } from 'src/app/models/interfaces/User';
+import { Volume } from 'src/app/models/interfaces/Volume';
 
 @Injectable({
   providedIn: 'root',
@@ -36,11 +39,28 @@ export class UserService {
     }).pipe(switchMap(() => this.userSubject.asObservable()));
   }
 
-  updateUser(userId: string, updatedPaths: Partial<User>) {
+  updateUser(userId: string, updatedPaths: Partial<User>): void {
     const userRef = doc(this.firestore, 'users', userId);
     updateDoc(userRef, updatedPaths);
     const updatedUser = { ...(this.userSubject.value || {}), ...updatedPaths };
     this.userSubject.next(updatedUser);
+  }
+
+  addFavoriteBook(book: Volume, user: Partial<User>): void {
+    if (user.books?.some(vol => vol.id === book.id)) return;
+    const userRef = doc(this.firestore, 'users', user.id as string);
+    updateDoc(userRef, { books: arrayUnion(book) });
+    user.books!.push(book);
+    this.userSubject.next(user);
+  }
+
+  removeFavoriteBook(book: Volume, user: Partial<User>): void {
+    if (!user.books?.some(vol => vol.id === book.id)) return;
+    const userRef = doc(this.firestore, 'users', user.id as string);
+    updateDoc(userRef, { books: arrayRemove(book) });
+    const bookIndex = user.books!.indexOf(book);
+    user.books!.splice(bookIndex, 1);
+    this.userSubject.next(user);
   }
 
   async deleteUser(userId: string): Promise<void> {

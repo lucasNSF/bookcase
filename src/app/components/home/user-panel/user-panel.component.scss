@@ -92,3 +92,9 @@ input[type='file'] {
   border-radius: 50%;
   overflow: hidden;
 }
+
+.favorite-books {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}

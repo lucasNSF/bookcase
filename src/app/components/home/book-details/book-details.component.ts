@@ -6,7 +6,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Volume } from 'src/app/models/interfaces/Volume';
 import { BookService } from 'src/app/services/book/book.service';
@@ -26,7 +26,8 @@ export class BookDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private bookService: BookService,
-    private loadService: LoadService
+    private loadService: LoadService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -49,5 +50,9 @@ export class BookDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  buyBook(): void {
+    console.log('buy book!');
   }
 }

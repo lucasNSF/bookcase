@@ -14,6 +14,7 @@ import { ToolbarComponent } from '../toolbar/toolbar.component';
 import { UserPanelComponent } from './user-panel/user-panel.component';
 import { LogService } from 'src/app/services/log/log.service';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { FavoriteBookIconComponent } from './favorite-book-icon/favorite-book-icon.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     SearchResultsComponent,
     BookDetailsComponent,
     UserPanelComponent,
+    FavoriteBookIconComponent,
   ],
   imports: [
     CommonModule,

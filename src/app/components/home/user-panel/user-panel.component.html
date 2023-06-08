@@ -31,8 +31,33 @@
   </div>
   <div class="user-books">
     <h1>Seus livros favoritados:</h1>
-    <ng-container>
-      <!-- Livros favoritados -->
-    </ng-container>
+    <section class="favorite-books" *ngFor="let book of getFavoriteBooks()">
+      <mat-card>
+        <mat-card-header>
+          <img
+            [src]="
+              book.volumeInfo.imageLinks
+                ? book.volumeInfo.imageLinks.thumbnail
+                : 'assets/images/empty-book.png'
+            "
+            alt="capa do livro {{ book.volumeInfo.title }}" />
+        </mat-card-header>
+        <mat-card-content>
+          <mat-card-title>{{ book.volumeInfo.title }}</mat-card-title>
+          <mat-card-subtitle>{{
+            book.volumeInfo.authors.join(', ')
+          }}</mat-card-subtitle>
+        </mat-card-content>
+        <mat-card-actions>
+          <app-favorite-book-icon
+            [book]="book"
+            [favorite]="true"></app-favorite-book-icon>
+          <mat-icon class="color-primary">stars</mat-icon>
+          <span>{{
+            book.volumeInfo.averageRating ? book.volumeInfo.averageRating : 0
+          }}</span>
+        </mat-card-actions>
+      </mat-card>
+    </section>
   </div>
 </mat-card>

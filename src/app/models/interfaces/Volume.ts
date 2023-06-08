@@ -10,4 +10,5 @@ export interface Volume {
   volumeInfo: Book;
   saleInfo: SaleInfo;
   accessInfo: AccessInfo;
+  favorite: boolean;
 }

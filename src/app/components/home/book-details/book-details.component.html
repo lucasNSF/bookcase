@@ -33,7 +33,11 @@
           <mat-card-actions>
             <div *ngIf="book?.saleInfo?.retailPrice" class="buy-container">
               <p class="price">$ {{ book?.saleInfo?.retailPrice?.amount }}</p>
-              <button class="buy" mat-raised-button color="primary">
+              <button
+                class="buy"
+                (click)="buyBook()"
+                mat-raised-button
+                color="primary">
                 Comprar
               </button>
             </div>

@@ -11,6 +11,7 @@ import { StorageError, getDownloadURL } from '@angular/fire/storage';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
+import { Volume } from 'src/app/models/interfaces/Volume';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { LoadService } from 'src/app/services/load/load.service';
 import { LogService } from 'src/app/services/log/log.service';
@@ -64,6 +65,10 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   closePage(): void {
     this.router.navigate(['home'], { replaceUrl: true });
+  }
+
+  getFavoriteBooks(): Volume[] {
+    return this.user?.books as Volume[];
   }
 
   onFileSelected(event: Event): void {

@@ -1,5 +1,5 @@
 <ng-container *ngIf="books">
-  <ng-container *ngFor="let book of books">
+  <ng-container *ngFor="let book of visibleBooks">
     <mat-card
       class="book focus-primary"
       tabindex="0"
@@ -29,7 +29,9 @@
         <span>{{ book.volumeInfo.language }}</span>
       </mat-card-footer>
       <mat-card-actions class="actions">
-        <mat-icon class="color-primary">favorite_border</mat-icon>
+        <app-favorite-book-icon
+          [book]="book"
+          [favorite]="book.favorite"></app-favorite-book-icon>
         <mat-icon class="color-primary">stars</mat-icon>
         <span>{{
           book.volumeInfo.averageRating ? book.volumeInfo.averageRating : 0

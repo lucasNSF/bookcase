@@ -1,0 +1,12 @@
+<mat-icon
+  class="color-primary"
+  *ngIf="favorite"
+  (click)="toggleFavoriteBook($event)"
+  >favorite</mat-icon
+>
+<mat-icon
+  class="color-primary"
+  *ngIf="!favorite"
+  (click)="toggleFavoriteBook($event)"
+  >favorite_border</mat-icon
+>
