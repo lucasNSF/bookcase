@@ -49,18 +49,25 @@ export class UserService {
   addFavoriteBook(book: Volume, user: Partial<User>): void {
     if (user.books?.some(vol => vol.id === book.id)) return;
     const userRef = doc(this.firestore, 'users', user.id as string);
-    updateDoc(userRef, { books: arrayUnion(book) });
-    user.books!.push(book);
-    this.userSubject.next(user);
+    updateDoc(userRef, { books: arrayUnion(book) }).then(() => {
+      user.books?.push(book);
+      this.userSubject.next(user);
+    });
   }
 
-  removeFavoriteBook(book: Volume, user: Partial<User>): void {
+  async removeFavoriteBook(book: Volume, user: Partial<User>): Promise<void> {
     if (!user.books?.some(vol => vol.id === book.id)) return;
     const userRef = doc(this.firestore, 'users', user.id as string);
-    updateDoc(userRef, { books: arrayRemove(book) });
-    const bookIndex = user.books!.indexOf(book);
-    user.books!.splice(bookIndex, 1);
-    this.userSubject.next(user);
+    const userBooks: Partial<User> | undefined = (await getDoc(userRef)).data();
+    if (!userBooks) {
+      throw new Error('books attribute is not exists on Firestore');
+    }
+    const removeBook = userBooks.books!.filter(vol => vol.id === book.id)[0];
+    updateDoc(userRef, { books: arrayRemove(removeBook) }).then(() => {
+      const bookIndex = user.books!.indexOf(book);
+      user.books!.splice(bookIndex, 1);
+      this.userSubject.next(user);
+    });
   }
 
   async deleteUser(userId: string): Promise<void> {

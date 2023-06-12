@@ -96,6 +96,7 @@ $app-light-theme: mat.define-light-theme(
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   background: url('assets/images/background.jpg');
   background-position: center;

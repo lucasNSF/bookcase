@@ -1,42 +1,5 @@
-<ng-container *ngIf="books">
-  <ng-container *ngFor="let book of visibleBooks">
-    <mat-card
-      class="book focus-primary"
-      tabindex="0"
-      (click)="openBookPage(book)">
-      <mat-card-header>
-        <mat-card-title-group>
-          <mat-card-title class="title">{{
-            book.volumeInfo.title
-          }}</mat-card-title>
-          <mat-card-subtitle *ngIf="book.volumeInfo.authors" class="authors">{{
-            book.volumeInfo.authors.join(', ')
-          }}</mat-card-subtitle>
-        </mat-card-title-group>
-      </mat-card-header>
-      <mat-card-content class="thumbnail-container">
-        <img
-          [src]="
-            book.volumeInfo.imageLinks
-              ? book.volumeInfo.imageLinks.thumbnail ||
-                book.volumeInfo.imageLinks.smallThumbnail ||
-                book.volumeInfo.imageLinks.small
-              : 'assets/images/empty-book.png'
-          "
-          alt="capa do livro {{ book.volumeInfo.title }}" />
-      </mat-card-content>
-      <mat-card-footer class="language">
-        <span>{{ book.volumeInfo.language }}</span>
-      </mat-card-footer>
-      <mat-card-actions class="actions">
-        <app-favorite-book-icon
-          [book]="book"
-          [favorite]="book.favorite"></app-favorite-book-icon>
-        <mat-icon class="color-primary">stars</mat-icon>
-        <span>{{
-          book.volumeInfo.averageRating ? book.volumeInfo.averageRating : 0
-        }}</span>
-      </mat-card-actions>
-    </mat-card>
+<ng-container *ngIf="booksWithFavorite">
+  <ng-container *ngFor="let book of booksWithFavorite">
+    <app-book [book]="book"></app-book>
   </ng-container>
 </ng-container>

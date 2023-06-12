@@ -1,13 +1,5 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  SimpleChanges,
-} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Subscription, take } from 'rxjs';
 import { Volume } from 'src/app/models/interfaces/Volume';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
@@ -16,42 +8,33 @@ import { AuthenticationService } from 'src/app/services/authentication/authentic
   templateUrl: './search-results.component.html',
   styleUrls: ['./search-results.component.scss'],
 })
-export class SearchResultsComponent implements OnChanges, OnInit, OnDestroy {
-  @Input() books: Volume[] | null = null;
-  visibleBooks: Volume[] = [];
-  private userFavoriteBooks!: Volume[];
+export class SearchResultsComponent implements OnChanges, OnDestroy {
+  @Input() books: Volume[] | undefined;
+  booksWithFavorite: Volume[] | undefined;
+  private userFavoriteBooks: Volume[] = [];
   private subscriptions: Subscription[] = [];
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private authenticationService: AuthenticationService
-  ) {}
+  constructor(private authenticationService: AuthenticationService) {}
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     const authSub = this.authenticationService
       .getUserInstance()
-      .subscribe(
-        userInstance =>
-          (this.userFavoriteBooks = userInstance?.books as Volume[])
-      );
+      .pipe(take(1))
+      .subscribe(userInstance => {
+        this.userFavoriteBooks = userInstance?.books as Volume[];
+        this.updateBooksWithFavorite();
+      });
     this.subscriptions.push(authSub);
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['books'] && this.books) {
-      this.visibleBooks = this.books!.map(vol => ({
-        ...vol,
-        favorite: this.userFavoriteBooks.some(f => f.id === vol.id),
-      }));
-    }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  openBookPage(book: Volume): void {
-    this.router.navigate(['book', book.id], { relativeTo: this.route });
+  private updateBooksWithFavorite(): void {
+    this.booksWithFavorite = this.books?.map(vol => ({
+      ...vol,
+      favorite: this.userFavoriteBooks.some(b => b.id === vol.id),
+    }));
   }
 }

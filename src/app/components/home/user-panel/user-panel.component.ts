@@ -2,14 +2,16 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { StorageError, getDownloadURL } from '@angular/fire/storage';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
 import { Volume } from 'src/app/models/interfaces/Volume';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
@@ -25,9 +27,12 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
   templateUrl: './user-panel.component.html',
   styleUrls: ['./user-panel.component.scss'],
 })
-export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class UserPanelComponent
+  implements OnInit, OnChanges, AfterViewInit, OnDestroy
+{
   isDark!: boolean;
   user: Partial<User> | null = null;
+  favoriteBooks: Volume[] | null = null;
   @ViewChild('loadContainer', { read: ViewContainerRef })
   loadContainer!: ViewContainerRef;
   private subscriptions: Subscription[] = [];
@@ -47,10 +52,15 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkUserIdentity();
-    const themeSub = this.themeService
-      .getTheme()
-      .subscribe(theme => (this.isDark = theme));
+    const themeSub = this.themeService.getTheme().subscribe(theme => {
+      this.isDark = theme;
+    });
     this.subscriptions.push(themeSub);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes...');
+    console.log(changes);
   }
 
   ngAfterViewInit(): void {
@@ -68,7 +78,10 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getFavoriteBooks(): Volume[] {
-    return this.user?.books as Volume[];
+    return this.user?.books?.map(vol => ({
+      ...vol,
+      favorite: true,
+    })) as Volume[];
   }
 
   onFileSelected(event: Event): void {
@@ -110,6 +123,7 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   private checkUserIdentity(): void {
     const authSub = this.authenticationService
       .getUserInstance()
+      .pipe(take(1))
       .subscribe(user => {
         this.loadService.addLoadBar(this.loadContainer);
         if (!user) {
@@ -128,6 +142,7 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
             this.router.navigate(['login'], { replaceUrl: true });
           } else {
             this.user = user;
+            this.favoriteBooks = this.getFavoriteBooks();
           }
         });
 

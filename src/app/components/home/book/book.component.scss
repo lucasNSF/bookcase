@@ -1,0 +1,58 @@
+.book {
+  width: 15rem;
+  height: 23rem;
+  margin-bottom: 1rem;
+  transition: 0.03s;
+
+  .title {
+    font-size: 1rem;
+    font-weight: 500;
+    width: 105%;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  .authors {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .thumbnail-container {
+    margin: auto;
+    img {
+      width: 8rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .language {
+    position: absolute;
+    bottom: 10px;
+    left: 14px;
+    text-transform: uppercase;
+  }
+
+  .actions {
+    position: absolute;
+    display: flex;
+    bottom: -5px;
+    right: 5px;
+
+    mat-icon {
+      margin-right: 5px;
+    }
+  }
+}
+
+app-favorite-book-icon {
+  margin-top: 2px;
+  margin-right: 5px;
+}
