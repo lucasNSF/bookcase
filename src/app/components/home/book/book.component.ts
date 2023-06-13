@@ -1,4 +1,13 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
@@ -13,6 +22,9 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class BookComponent implements OnInit, OnDestroy {
   @Input() book!: Volume;
+  @Output() likedBookEvent = new EventEmitter<ElementRef<HTMLElement>>();
+  @ViewChild('bookElement', { read: ElementRef<HTMLElement> })
+  bookElement!: ElementRef<HTMLElement>;
   user: Partial<User> | null = null;
   private subscriptions: Subscription[] = [];
 
@@ -39,12 +51,14 @@ export class BookComponent implements OnInit, OnDestroy {
     if (!this.book.favorite) {
       this.userService.addFavoriteBook(this.book, this.user as Partial<User>);
       this.book.favorite = true;
+      this.likedBookEvent.emit(this.bookElement);
     } else {
       this.userService.removeFavoriteBook(
         this.book,
         this.user as Partial<User>
       );
       this.book.favorite = false;
+      this.likedBookEvent.emit(this.bookElement);
     }
   }
 

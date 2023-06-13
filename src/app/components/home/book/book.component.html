@@ -1,4 +1,8 @@
-<mat-card class="book focus-primary" tabindex="0" (click)="openBookPage(book)">
+<mat-card
+  class="book focus-primary"
+  tabindex="0"
+  (click)="openBookPage(book)"
+  #bookElement>
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title class="title">{{ book.volumeInfo.title }}</mat-card-title>

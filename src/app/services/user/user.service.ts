@@ -62,10 +62,10 @@ export class UserService {
     if (!userBooks) {
       throw new Error('books attribute is not exists on Firestore');
     }
-    const removeBook = userBooks.books!.filter(vol => vol.id === book.id)[0];
+    const removeBook = userBooks.books!.find(vol => vol.id === book.id);
+    if (!removeBook) return;
     updateDoc(userRef, { books: arrayRemove(removeBook) }).then(() => {
-      const bookIndex = user.books!.indexOf(book);
-      user.books!.splice(bookIndex, 1);
+      user.books = user.books?.filter(vol => vol.id !== book.id);
       this.userSubject.next(user);
     });
   }

@@ -2,10 +2,10 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  OnChanges,
+  ElementRef,
   OnDestroy,
   OnInit,
-  SimpleChanges,
+  Renderer2,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
@@ -27,9 +27,7 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
   templateUrl: './user-panel.component.html',
   styleUrls: ['./user-panel.component.scss'],
 })
-export class UserPanelComponent
-  implements OnInit, OnChanges, AfterViewInit, OnDestroy
-{
+export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
   isDark!: boolean;
   user: Partial<User> | null = null;
   favoriteBooks: Volume[] | null = null;
@@ -47,7 +45,8 @@ export class UserPanelComponent
     private loadService: LoadService,
     private changeDetectorRef: ChangeDetectorRef,
     private validationService: ValidationService,
-    private userService: UserService
+    private userService: UserService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -58,11 +57,6 @@ export class UserPanelComponent
     this.subscriptions.push(themeSub);
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes...');
-    console.log(changes);
-  }
-
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.loadService.closeLoadBar(this.loadContainer);
@@ -71,6 +65,13 @@ export class UserPanelComponent
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  handleLikedBookEvent($bookCard: ElementRef<HTMLElement>): void {
+    this.renderer.addClass($bookCard.nativeElement, 'book-hidden');
+    setTimeout(() => {
+      $bookCard.nativeElement.remove();
+    }, 500);
   }
 
   closePage(): void {

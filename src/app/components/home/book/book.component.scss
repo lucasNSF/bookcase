@@ -2,7 +2,9 @@
   width: 15rem;
   height: 23rem;
   margin-bottom: 1rem;
-  transition: 0.03s;
+  transition: 0.3s;
+  opacity: 1;
+  visibility: visible;
 
   .title {
     font-size: 1rem;
@@ -55,4 +57,9 @@
 app-favorite-book-icon {
   margin-top: 2px;
   margin-right: 5px;
+}
+
+.book-hidden {
+  opacity: 0;
+  visibility: hidden;
 }
