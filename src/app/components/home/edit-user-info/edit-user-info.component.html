@@ -1,0 +1,70 @@
+<div class="container">
+  <mat-card class="main-modal">
+    <mat-card-header>
+      <mat-card-title>Alterar perfil</mat-card-title>
+      <div class="modal-icons">
+        <app-theme-switch></app-theme-switch>
+        <mat-icon (click)="closePage()">close</mat-icon>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form">
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input type="text" matInput formControlName="name" />
+            <mat-error *ngIf="form.get('name')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+            <mat-error *ngIf="form.get('name')?.hasError('minlength')">
+              Nome inválido
+            </mat-error>
+            <mat-error *ngIf="form.get('name')?.hasError('maxlength')">
+              Nome muito grande, máximo até 100 caracteres
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div>
+          <mat-form-field appearance="outline">
+            <mat-label>Nova Senha</mat-label>
+            <input
+              type="password"
+              matInput
+              #newPassword
+              formControlName="password" />
+            <mat-icon
+              class="show-password"
+              appChangePasswordVisibility
+              [inputRef]="newPassword"
+              >remove_red_eye</mat-icon
+            >
+            <mat-error *ngIf="form.get('password')?.hasError('required')">
+              Campo obrigatório
+            </mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('weakPassword')">
+              Senha muito fraca
+            </mat-error>
+            <mat-error *ngIf="form.get('password')?.hasError('maxLength')">
+              Tamanho limite de senha atingido
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <button
+          class="submit"
+          mat-raised-button
+          color="primary"
+          (click)="onSubmit()"
+          [disabled]="!form.valid"
+          #submitButton>
+          {{ isRegistering ? 'Salvando...' : 'Salvar alterações' }}
+          <mat-progress-spinner
+            *ngIf="isRegistering"
+            mode="indeterminate"
+            color="accent"
+            diameter="15"></mat-progress-spinner>
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

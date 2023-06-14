@@ -1,7 +1,12 @@
 <ng-template #loadContainer></ng-template>
 
+<router-outlet name="editPanel"></router-outlet>
+
 <mat-card class="panel-container">
   <mat-card-actions class="panel-actions">
+    <mat-icon class="mat-18" matTooltip="Logout" (click)="logout()"
+      >exit_to_app</mat-icon
+    >
     <app-theme-switch></app-theme-switch>
     <mat-icon class="close-btn" (click)="closePage()">close</mat-icon>
   </mat-card-actions>
@@ -26,7 +31,9 @@
     <div class="user-info">
       <p class="name">{{ user?.name }}</p>
       <p class="email">{{ user?.email }}</p>
-      <button class="edit" mat-flat-button color="accent">Editar dados</button>
+      <button class="edit" mat-flat-button color="accent" (click)="editUser()">
+        Editar dados
+      </button>
     </div>
   </div>
   <div class="user-books">

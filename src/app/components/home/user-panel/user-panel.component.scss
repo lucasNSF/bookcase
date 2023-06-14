@@ -18,7 +18,7 @@
 
 .user-panel {
   display: flex;
-  margin-top: 5rem;
+  margin-top: 2rem;
   margin-left: 5rem;
 }
 
@@ -38,6 +38,7 @@
     z-index: 5;
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 4;
   }
 
   &:hover::after {
@@ -77,7 +78,7 @@ input[type='file'] {
   margin-left: 5rem;
 
   h1 {
-    margin-top: 3rem;
+    margin-top: 1.2rem;
   }
 }
 

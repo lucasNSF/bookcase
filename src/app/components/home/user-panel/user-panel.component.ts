@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -10,7 +9,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { StorageError, getDownloadURL } from '@angular/fire/storage';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
 import { Volume } from 'src/app/models/interfaces/Volume';
@@ -27,7 +26,7 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
   templateUrl: './user-panel.component.html',
   styleUrls: ['./user-panel.component.scss'],
 })
-export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
+export class UserPanelComponent implements OnInit, OnDestroy {
   isDark!: boolean;
   user: Partial<User> | null = null;
   favoriteBooks: Volume[] | null = null;
@@ -51,20 +50,33 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     this.checkUserIdentity();
+    const routerSub = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart) {
+        this.checkUserIdentity();
+      }
+    });
+    this.subscriptions.push(routerSub);
     const themeSub = this.themeService.getTheme().subscribe(theme => {
       this.isDark = theme;
     });
     this.subscriptions.push(themeSub);
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.loadService.closeLoadBar(this.loadContainer);
-    }, 2000);
-  }
-
   ngOnDestroy(): void {
     this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  logout(): void {
+    this.authenticationService.logout();
+    this.authenticationService.removeUserInstance();
+    this.ngOnDestroy();
+    this.router.navigate(['/login'], { replaceUrl: true });
+  }
+
+  editUser(): void {
+    this.router.navigate([{ outlets: { editPanel: ['edit'] } }], {
+      relativeTo: this.route,
+    });
   }
 
   handleLikedBookEvent($bookCard: ElementRef<HTMLElement>): void {
@@ -144,6 +156,9 @@ export class UserPanelComponent implements OnInit, AfterViewInit, OnDestroy {
           } else {
             this.user = user;
             this.favoriteBooks = this.getFavoriteBooks();
+            setTimeout(() => {
+              this.loadService.closeLoadBar(this.loadContainer);
+            }, 1000);
           }
         });
 

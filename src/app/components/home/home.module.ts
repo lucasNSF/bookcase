@@ -15,6 +15,9 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
 import { LogService } from 'src/app/services/log/log.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BookComponent } from './book/book.component';
+import { EditUserInfoComponent } from './edit-user-info/edit-user-info.component';
+import { DialogService } from 'src/app/services/dialog/dialog.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,8 +27,11 @@ import { BookComponent } from './book/book.component';
     BookDetailsComponent,
     UserPanelComponent,
     BookComponent,
+    EditUserInfoComponent,
   ],
   imports: [
+    FormsModule,
+    ReactiveFormsModule,
     CommonModule,
     HomeRoutingModule,
     AngularMaterialModule,
@@ -33,6 +39,6 @@ import { BookComponent } from './book/book.component';
     ToolbarComponent,
     SharedModule,
   ],
-  providers: [BookService, LoadService, LogService],
+  providers: [BookService, LoadService, LogService, DialogService],
 })
 export class HomeModule {}

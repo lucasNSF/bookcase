@@ -6,10 +6,12 @@ import { AuthenticationService } from '../services/authentication/authentication
 export const authGuard: CanActivateFn = async () => {
   const authenticationService = inject(AuthenticationService);
   const router = inject(Router);
-  const userInstance = await authenticationService.getUserInstance();
+  const currentUser = authenticationService.getCurrentAuthUser();
+  const userIdFromLocalStorage = localStorage.getItem('userId');
 
-  if (!userInstance) {
-    router.navigate(['/', 'login']);
+  if (!currentUser || currentUser.uid !== userIdFromLocalStorage) {
+    authenticationService.removeUserInstance();
+    router.navigate(['/login'], { replaceUrl: true });
   }
 
   return true;

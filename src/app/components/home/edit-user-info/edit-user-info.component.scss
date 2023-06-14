@@ -1,0 +1,75 @@
+.container {
+  min-height: 100dvh;
+  width: 100dvw;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: transparent;
+  backdrop-filter: blur(5px);
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-modal {
+  position: absolute;
+  width: 70dvw;
+  padding: 1rem;
+
+  mat-card-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+  }
+
+  .modal-icons {
+    position: absolute;
+    right: 1rem;
+    display: flex;
+    gap: 15px;
+
+    mat-icon:hover {
+      cursor: pointer;
+    }
+  }
+
+  form {
+    margin-top: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    mat-form-field {
+      width: 65dvw;
+    }
+
+    .show-password {
+      position: absolute;
+      cursor: pointer;
+      right: 0;
+    }
+
+    .submit {
+      display: flex;
+      margin: 0 auto;
+    }
+  }
+}
+
+mat-progress-spinner {
+  display: inline-block;
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+}
+
+mat-error {
+  overflow-y: hidden;
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+  display: inline;
+  margin-right: 0.5rem;
+  &::before {
+    content: '*';
+  }
+}
