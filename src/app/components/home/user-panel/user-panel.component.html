@@ -38,16 +38,24 @@
   </div>
   <div class="user-books">
     <h1>Seus livros favoritados:</h1>
-    <ng-container *ngIf="favoriteBooks?.length">
-      <section class="favorite-books">
-        <ng-container *ngFor="let book of favoriteBooks">
-          <app-book
-            [book]="book"
-            (likedBookEvent)="handleLikedBookEvent($event)"></app-book>
-        </ng-container>
+    <ng-container *ngIf="booksPerSlide?.length">
+      <section>
+        <swiper-container
+          slides-per-view="1"
+          navigation="true"
+          #swiperContainer>
+          <swiper-slide
+            *ngFor="let slide of booksPerSlide"
+            class="favorite-books">
+            <app-book
+              *ngFor="let book of slide"
+              [book]="book"
+              (likedBookEvent)="handleLikedBookEvent($event)"></app-book>
+          </swiper-slide>
+        </swiper-container>
       </section>
     </ng-container>
-    <section class="no-books bg-accent" *ngIf="!favoriteBooks?.length">
+    <section class="no-books bg-accent" *ngIf="!booksPerSlide?.length">
       <p>Você ainda não favoritou nenhum livro :(</p>
     </section>
   </div>

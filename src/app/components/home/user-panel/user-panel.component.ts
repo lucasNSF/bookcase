@@ -8,7 +8,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { StorageError, getDownloadURL } from '@angular/fire/storage';
+import { getDownloadURL, StorageError } from '@angular/fire/storage';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
@@ -32,6 +32,8 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   favoriteBooks: Volume[] | null = null;
   @ViewChild('loadContainer', { read: ViewContainerRef })
   loadContainer!: ViewContainerRef;
+  @ViewChild('swiperContainer') swiperContainer!: ElementRef<HTMLElement>;
+  booksPerSlide!: Volume[][];
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -83,6 +85,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     this.renderer.addClass($bookCard.nativeElement, 'book-hidden');
     setTimeout(() => {
       $bookCard.nativeElement.remove();
+      this.checkUserIdentity();
     }, 500);
   }
 
@@ -134,7 +137,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
   }
 
   private checkUserIdentity(): void {
-    const authSub = this.authenticationService
+    this.authenticationService
       .getUserInstance()
       .pipe(take(1))
       .subscribe(user => {
@@ -147,23 +150,22 @@ export class UserPanelComponent implements OnInit, OnDestroy {
           this.router.navigate(['login'], { replaceUrl: true });
         }
 
-        const userSub = this.route.params.subscribe(params => {
-          const userId: string = params['id'];
-          if (userId !== user?.id) {
-            this.logService.showErrorLog('Acesso negado!');
-            this.authenticationService.removeUserInstance();
-            this.router.navigate(['login'], { replaceUrl: true });
-          } else {
-            this.user = user;
-            this.favoriteBooks = this.getFavoriteBooks();
-            setTimeout(() => {
-              this.loadService.closeLoadBar(this.loadContainer);
-            }, 1000);
-          }
-        });
-
-        this.subscriptions.push(userSub);
+        this.user = user;
+        this.favoriteBooks = this.getFavoriteBooks();
+        this.booksPerSlide = this.getUserBooksForSlides(5);
+        setTimeout(() => {
+          this.loadService.closeLoadBar(this.loadContainer);
+        }, 1000);
       });
-    this.subscriptions.push(authSub);
+  }
+
+  private getUserBooksForSlides(coefficient: number): Volume[][] {
+    const copy = this.favoriteBooks!;
+    const result: Volume[][] = [];
+    while (copy.length) {
+      const partition = copy.splice(0, coefficient);
+      result.push(partition);
+    }
+    return result;
   }
 }

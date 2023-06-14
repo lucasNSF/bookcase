@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BookService } from 'src/app/services/book/book.service';
 import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
 
@@ -40,5 +40,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     SharedModule,
   ],
   providers: [BookService, LoadService, LogService, DialogService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomeModule {}
