@@ -1,10 +1,14 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+} from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { FirebaseError } from 'firebase/app';
 import { take } from 'rxjs';
-import { User } from 'src/app/models/interfaces/User';
+import { EmailAndPasswordFactory } from 'src/app/models/authMethods/EmailAndPasswordFactory';
 import { EmailValidation } from 'src/app/models/validators/EmailValidation';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { LogService } from 'src/app/services/log/log.service';
@@ -25,24 +29,26 @@ export class LoginComponent implements OnInit, AfterViewInit {
     private validationService: ValidationService,
     private authenticationService: AuthenticationService,
     private logService: LogService,
-    private router: Router
+    private router: Router,
+    private authFactory: EmailAndPasswordFactory
   ) {
     this.form = this.formBuilder.group({
       email: [null, [Validators.required]],
       password: [null, [Validators.required]],
+      stayConnected: false,
     });
   }
 
   ngOnInit(): void {
     this.authenticationService
-      .getUserInstance()
+      .getCurrentUser()
       .pipe(take(1))
-      .subscribe(userInstance => {
-        if (userInstance) {
-          this.router.navigate(['/', 'home'], { replaceUrl: true });
+      .subscribe(user => {
+        if (user) {
           this.logService.showSuccessLog(
-            `Continuando como ${userInstance.name}...`
+            `Continuando como ${user.displayName?.normalize()}...`
           );
+          this.router.navigate(['/home'], { replaceUrl: true });
         }
       });
   }
@@ -55,13 +61,21 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   async login(): Promise<void> {
-    const formValues: User = this.form.value;
+    const formValues = this.form.value;
 
     try {
       this.isRegistering = true;
       this.loginBtn.disabled = true;
-      const credentials = await this.authenticationService.signIn(formValues);
-      this.authenticationService.setUserInstance(credentials);
+
+      const emailAndPasswordAuth = this.authFactory.create({
+        email: formValues['email'],
+        password: formValues['password'],
+      });
+      const persistence = this.form.value['stayConnected']
+        ? browserLocalPersistence
+        : browserSessionPersistence;
+
+      this.authenticationService.signIn(emailAndPasswordAuth, persistence);
       this.logService.showSuccessLog('Login efetuado com sucesso!');
       this.router.navigate(['/', 'home'], { replaceUrl: true });
     } catch (err) {

@@ -15,7 +15,7 @@ import {
   updateDoc,
   where,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, defer, switchMap } from 'rxjs';
+import { BehaviorSubject, defer, Observable, switchMap } from 'rxjs';
 import { UserAlreadyExistsError } from 'src/app/models/errors/UserAlreadyExistsError';
 import { User } from 'src/app/models/interfaces/User';
 import { Volume } from 'src/app/models/interfaces/Volume';
@@ -28,7 +28,7 @@ export class UserService {
 
   constructor(private firestore: Firestore) {}
 
-  getUser(userId: string) {
+  getUser(userId: string): Observable<Partial<User> | null> {
     const docRef = doc(this.firestore, 'users', userId);
     return defer(async () => {
       const docSnap = await getDoc(docRef);
@@ -46,26 +46,26 @@ export class UserService {
     this.userSubject.next(updatedUser);
   }
 
-  addFavoriteBook(book: Volume, user: Partial<User>): void {
-    if (user.books?.some(vol => vol.id === book.id)) return;
-    const userRef = doc(this.firestore, 'users', user.id as string);
+  addFavoriteBook(book: Volume, user: User): void {
+    if (user.books.some(vol => vol.id === book.id)) return;
+    const userRef = doc(this.firestore, 'users', user.id);
     updateDoc(userRef, { books: arrayUnion(book) }).then(() => {
-      user.books?.push(book);
+      user.books.push(book);
       this.userSubject.next(user);
     });
   }
 
-  async removeFavoriteBook(book: Volume, user: Partial<User>): Promise<void> {
-    if (!user.books?.some(vol => vol.id === book.id)) return;
-    const userRef = doc(this.firestore, 'users', user.id as string);
-    const userBooks: Partial<User> | undefined = (await getDoc(userRef)).data();
+  async removeFavoriteBook(book: Volume, user: User): Promise<void> {
+    if (!user.books.some(vol => vol.id === book.id)) return;
+    const userRef = doc(this.firestore, 'users', user.id);
+    const userBooks = (await getDoc(userRef)).data() as User | undefined;
     if (!userBooks) {
       throw new Error('books attribute is not exists on Firestore');
     }
-    const removeBook = userBooks.books!.find(vol => vol.id === book.id);
+    const removeBook = userBooks.books.find(vol => vol.id === book.id);
     if (!removeBook) return;
     updateDoc(userRef, { books: arrayRemove(removeBook) }).then(() => {
-      user.books = user.books?.filter(vol => vol.id !== book.id);
+      user.books = user.books.filter(vol => vol.id !== book.id);
       this.userSubject.next(user);
     });
   }
@@ -75,17 +75,17 @@ export class UserService {
   }
 
   async addUser(user: User): Promise<void> {
-    const firestoreUser: Partial<User> = Object.assign({}, user);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...firestoreUser } = user;
     firestoreUser.books = [];
     firestoreUser.profilePhoto = '';
-    delete firestoreUser.password;
-    const docRef: DocumentReference<Partial<User>> = doc(
+    const docRef: DocumentReference<User> = doc(
       this.firestore,
       'users',
-      firestoreUser.id!
-    ) as DocumentReference<Partial<User>>;
+      firestoreUser.id
+    ) as DocumentReference<User>;
 
-    if (await this.emailAlreadyExists(firestoreUser.email!)) {
+    if (await this.emailAlreadyExists(firestoreUser.email)) {
       throw new UserAlreadyExistsError();
     }
 
@@ -101,11 +101,8 @@ export class UserService {
     return true;
   }
 
-  private getDBInstance(): CollectionReference<Partial<User>> {
-    const dbInstance: CollectionReference<Partial<User>> = collection(
-      this.firestore,
-      'users'
-    );
-    return dbInstance;
+  private getDBInstance(): CollectionReference<User> {
+    const dbInstance = collection(this.firestore, 'users');
+    return dbInstance as CollectionReference<User>;
   }
 }

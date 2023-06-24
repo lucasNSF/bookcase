@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { Subscription, take } from 'rxjs';
 import { Volume } from 'src/app/models/interfaces/Volume';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-search-results',
@@ -14,17 +15,26 @@ export class SearchResultsComponent implements OnChanges, OnDestroy {
   private userFavoriteBooks: Volume[] = [];
   private subscriptions: Subscription[] = [];
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(
+    private authenticationService: AuthenticationService,
+    private userService: UserService
+  ) {}
 
   ngOnChanges(): void {
-    const authSub = this.authenticationService
-      .getUserInstance()
+    this.authenticationService
+      .getCurrentUser()
       .pipe(take(1))
-      .subscribe(userInstance => {
-        this.userFavoriteBooks = userInstance?.books as Volume[];
-        this.updateBooksWithFavorite();
+      .subscribe(user => {
+        if (user) {
+          this.userService
+            .getUser(user.uid)
+            .pipe(take(1))
+            .subscribe(userInstance => {
+              this.userFavoriteBooks = userInstance?.books as Volume[];
+              this.updateBooksWithFavorite();
+            });
+        }
       });
-    this.subscriptions.push(authSub);
   }
 
   ngOnDestroy(): void {

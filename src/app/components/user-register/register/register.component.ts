@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseError } from '@angular/fire/app';
-import { UserCredential } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { Router } from '@angular/router';
@@ -10,7 +9,6 @@ import { PasswordMatchValidation } from 'src/app/models/validators/PasswordMatch
 import { PasswordStrongValidation } from 'src/app/models/validators/PasswordStrongValidation';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { LogService } from 'src/app/services/log/log.service';
-import { UserService } from 'src/app/services/user/user.service';
 import { ValidationService } from 'src/app/services/validation/validation.service';
 
 @Component({
@@ -26,7 +24,6 @@ export class RegisterComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private validationService: ValidationService,
-    private userService: UserService,
     private authenticationService: AuthenticationService,
     private logService: LogService,
     private router: Router
@@ -51,25 +48,20 @@ export class RegisterComponent implements OnInit {
     try {
       this.isRegistering = true;
       this.submitBtn.disabled = true;
-      const userCredentials: UserCredential =
-        await this.authenticationService.registerUser(formValues);
 
-      await this.userService.addUser({
-        ...formValues,
-        id: userCredentials.user.uid,
-      });
+      const emailAndPasswordAuth =
+        this.authenticationService.signUp(emailAndPasswordAuth);
 
-      this.authenticationService.setUserInstance(userCredentials);
-
-      this.logService.showSuccessLog('Cadastro concluído!');
-      this.resetForm();
-      this.addFormValidators();
       this.router.navigate(['/', 'home'], { replaceUrl: true });
     } catch (err) {
       const log = this.validationService.handleFirebaseError(
         err as FirebaseError
       );
       this.logService.showErrorLog(log);
+    } finally {
+      this.logService.showSuccessLog('Cadastro concluído!');
+      this.resetForm();
+      this.addFormValidators();
     }
 
     this.isRegistering = false;

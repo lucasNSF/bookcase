@@ -4,9 +4,11 @@ import { Subscription } from 'rxjs';
 import { User } from 'src/app/models/interfaces/User';
 import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
+import { UserService } from 'src/app/services/user/user.service';
 import { AngularMaterialModule } from 'src/app/shared/angular-material/angular-material.module';
-import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+
+import { ThemeSwitchComponent } from '../theme-switch/theme-switch.component';
 
 @Component({
   selector: 'app-toolbar',
@@ -22,15 +24,25 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authenticationService: AuthenticationService,
+    private userService: UserService,
     private themeService: ThemeService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const userSub = this.authenticationService
-      .getUserInstance()
-      .subscribe(userInstance => (this.user = userInstance));
-    this.subscriptions.push(userSub);
+    const authSub = this.authenticationService
+      .getCurrentUser()
+      .subscribe(user => {
+        if (user) {
+          const userSub = this.userService
+            .getUser(user.uid)
+            .subscribe(userInstance => {
+              this.user = userInstance;
+            });
+          this.subscriptions.push(userSub);
+        }
+      });
+    this.subscriptions.push(authSub);
 
     const themeSub = this.themeService
       .getTheme()

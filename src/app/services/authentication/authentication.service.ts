@@ -1,54 +1,62 @@
 import { Injectable } from '@angular/core';
 import {
   Auth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
+  browserSessionPersistence,
+  User as FirebaseUser,
+  onAuthStateChanged,
+  Persistence,
+  setPersistence,
   signOut,
-  updatePassword,
+  updateProfile,
   UserCredential,
 } from '@angular/fire/auth';
-import { User } from 'src/app/models/interfaces/User';
-import { User as FirebaseUser } from '@angular/fire/auth';
-
-import { UserService } from '../user/user.service';
-import { Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, take } from 'rxjs';
+import { AuthStrategy } from 'src/app/models/interfaces/AuthStrategy';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  constructor(private auth: Auth, private userService: UserService) {}
+  private authUserSubject = new BehaviorSubject<FirebaseUser | null>(null);
 
-  setUserInstance(credential: UserCredential): void {
-    localStorage.setItem('userId', credential.user.uid);
+  constructor(private auth: Auth) {}
+
+  listenAuthUser(): void {
+    onAuthStateChanged(this.auth, user => {
+      this.authUserSubject.next(user);
+    });
   }
 
-  getUserInstance(): Observable<Partial<User> | null> {
-    const userId = localStorage.getItem('userId');
-    if (!userId) return of(null);
-    return this.userService.getUser(userId);
+  getCurrentUser(): Observable<FirebaseUser | null> {
+    return this.authUserSubject.asObservable();
   }
 
-  getCurrentAuthUser(): FirebaseUser | null {
-    return this.auth.currentUser;
+  updateAuthUserFields(userFields: {
+    displayName?: string;
+    photoURL?: string;
+  }) {
+    this.getCurrentUser()
+      .pipe(take(1))
+      .subscribe(user => {
+        if (user) {
+          updateProfile(user, userFields).then(() =>
+            this.authUserSubject.next(user)
+          );
+        }
+      });
   }
 
-  removeUserInstance(): void {
-    localStorage.removeItem('userId');
+  async signUp(authMethod: AuthStrategy): Promise<UserCredential> {
+    await setPersistence(this.auth, browserSessionPersistence);
+    return await authMethod.signUp();
   }
 
-  registerUser(user: User): Promise<UserCredential> {
-    return createUserWithEmailAndPassword(this.auth, user.email, user.password);
-  }
-
-  signIn(user: User): Promise<UserCredential> {
-    return signInWithEmailAndPassword(this.auth, user.email, user.password);
-  }
-
-  updateUserPassword(newPassword: string): void {
-    const user = this.auth.currentUser;
-    if (!user) throw new Error('Current user is null');
-    updatePassword(user, newPassword);
+  async signIn(
+    authMethod: AuthStrategy,
+    persistence: Persistence
+  ): Promise<UserCredential> {
+    await setPersistence(this.auth, persistence);
+    return await authMethod.signIn();
   }
 
   logout(): void {

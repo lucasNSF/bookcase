@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { DialogComponent } from 'src/app/components/dialog/dialog.component';
 
 @Injectable({
   providedIn: 'root',
@@ -7,7 +8,12 @@ import { MatDialog } from '@angular/material/dialog';
 export class DialogService {
   constructor(private dialog: MatDialog) {}
 
-  openModal(): void {
-    // this.dialog.open();
+  openModal(
+    message: string,
+    callback: () => void
+  ): MatDialogRef<DialogComponent> {
+    return this.dialog.open(DialogComponent, {
+      data: { message, callback },
+    });
   }
 }

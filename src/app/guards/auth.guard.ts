@@ -7,19 +7,18 @@ import { AuthenticationService } from '../services/authentication/authentication
 export const authGuard: CanActivateFn = (route: ActivatedRouteSnapshot) => {
   const authenticationService = inject(AuthenticationService);
   const router = inject(Router);
-  return authenticationService.getUserInstance().pipe(
+  return authenticationService.getCurrentUser().pipe(
     take(1),
     switchMap(userInstance => {
-      const uidFromLocalStorage = localStorage.getItem('userId');
-      const uidFromURLParam = route.params['id'];
-      if (uidFromURLParam && uidFromURLParam !== userInstance?.id) {
-        authenticationService.removeUserInstance();
+      if (!userInstance) {
         return router.navigate(['/login'], { replaceUrl: true });
       }
 
-      if (!userInstance || userInstance?.id !== uidFromLocalStorage) {
+      const uidFromURLParam = route.params['id'];
+      if (uidFromURLParam !== userInstance.uid) {
         return router.navigate(['/login'], { replaceUrl: true });
       }
+
       return of(true);
     }),
     catchError(() => {

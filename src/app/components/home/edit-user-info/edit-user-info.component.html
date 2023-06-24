@@ -8,6 +8,22 @@
       </div>
     </mat-card-header>
     <mat-card-content>
+      <button
+        mat-raised-button
+        class="action"
+        color="accent"
+        (click)="removeProfilePhoto()"
+        [disabled]="!user?.profilePhoto">
+        Remover Foto de Perfil
+      </button>
+      <button
+        mat-raised-button
+        class="action"
+        color="warn"
+        (click)="deleteAccount()">
+        Excluir Conta
+      </button>
+
       <form [formGroup]="form">
         <div>
           <mat-form-field appearance="outline">
@@ -24,35 +40,11 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div>
-          <mat-form-field appearance="outline">
-            <mat-label>Nova Senha</mat-label>
-            <input
-              type="password"
-              matInput
-              #newPassword
-              formControlName="password" />
-            <mat-icon
-              class="show-password"
-              appChangePasswordVisibility
-              [inputRef]="newPassword"
-              >remove_red_eye</mat-icon
-            >
-            <mat-error *ngIf="form.get('password')?.hasError('required')">
-              Campo obrigatório
-            </mat-error>
-            <mat-error *ngIf="form.get('password')?.hasError('weakPassword')">
-              Senha muito fraca
-            </mat-error>
-            <mat-error *ngIf="form.get('password')?.hasError('maxLength')">
-              Tamanho limite de senha atingido
-            </mat-error>
-          </mat-form-field>
-        </div>
 
         <button
           class="submit"
           mat-raised-button
+          type="submit"
           color="primary"
           (click)="onSubmit()"
           [disabled]="!form.valid"

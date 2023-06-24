@@ -32,7 +32,6 @@
   }
 
   .focus-primary {
-    &:focus,
     &:hover {
       border: 2px solid mat.get-color-from-palette($primary-palette);
       cursor: pointer;
@@ -71,6 +70,8 @@ $app-light-theme: mat.define-light-theme(
 @include mat.input-theme($app-light-theme);
 @include mat.progress-spinner-theme($app-light-theme);
 @include mat.progress-bar-theme($app-light-theme);
+@include mat.dialog-theme($app-light-theme);
+@include mat.checkbox-theme($app-light-theme);
 @include color($app-light-theme);
 
 .dark-theme {
@@ -81,6 +82,8 @@ $app-light-theme: mat.define-light-theme(
   @include mat.input-color($app-dark-theme);
   @include mat.progress-spinner-color($app-dark-theme);
   @include mat.progress-bar-color($app-dark-theme);
+  @include mat.dialog-color($app-dark-theme);
+  @include mat.checkbox-color($app-dark-theme);
   @include color($app-dark-theme);
 
   background: radial-gradient(

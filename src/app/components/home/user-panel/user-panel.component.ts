@@ -8,6 +8,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
+import { User as FirebaseUser } from '@angular/fire/auth';
 import { getDownloadURL, StorageError } from '@angular/fire/storage';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { Subscription, take } from 'rxjs';
@@ -28,6 +29,7 @@ import { ValidationService } from 'src/app/services/validation/validation.servic
 })
 export class UserPanelComponent implements OnInit, OnDestroy {
   isDark!: boolean;
+  authUser!: FirebaseUser;
   user: Partial<User> | null = null;
   favoriteBooks: Volume[] | null = null;
   @ViewChild('loadContainer', { read: ViewContainerRef })
@@ -70,7 +72,6 @@ export class UserPanelComponent implements OnInit, OnDestroy {
 
   logout(): void {
     this.authenticationService.logout();
-    this.authenticationService.removeUserInstance();
     this.ngOnDestroy();
     this.router.navigate(['/login'], { replaceUrl: true });
   }
@@ -86,7 +87,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       $bookCard.nativeElement.remove();
       this.checkUserIdentity();
-    }, 500);
+    }, 600);
   }
 
   closePage(): void {
@@ -106,7 +107,7 @@ export class UserPanelComponent implements OnInit, OnDestroy {
     if (!file) return;
     const uploadTask = this.storageService.uploadProfilePhoto(
       file,
-      this.user?.id as string
+      this.user as User
     );
     const componentRef = this.loadService.addDeterminateLoadBar(
       this.loadContainer
@@ -132,30 +133,41 @@ export class UserPanelComponent implements OnInit, OnDestroy {
           profilePhoto: downloadUrl,
         });
         this.loadService.closeLoadBar(this.loadContainer);
+        this.userService
+          .getUser(this.authUser.uid)
+          .pipe(take(1))
+          .subscribe(user => {
+            this.user = user;
+          });
       }
     );
   }
 
   private checkUserIdentity(): void {
     this.authenticationService
-      .getUserInstance()
+      .getCurrentUser()
       .pipe(take(1))
       .subscribe(user => {
         this.loadService.addLoadBar(this.loadContainer);
-        if (!user) {
-          this.logService.showErrorLog(
-            'Ocorreu um erro, faça login novamente!'
-          );
-          this.authenticationService.removeUserInstance();
-          this.router.navigate(['login'], { replaceUrl: true });
+        if (user !== null) {
+          this.authUser = user;
+          this.userService
+            .getUser(user.uid)
+            .pipe(take(1))
+            .subscribe(u => {
+              this.user = u;
+              this.favoriteBooks = this.getFavoriteBooks();
+              this.booksPerSlide = this.getUserBooksForSlides(5);
+              setTimeout(() => {
+                this.loadService.closeLoadBar(this.loadContainer);
+              }, 1000);
+            });
+          return;
         }
 
-        this.user = user;
-        this.favoriteBooks = this.getFavoriteBooks();
-        this.booksPerSlide = this.getUserBooksForSlides(5);
-        setTimeout(() => {
-          this.loadService.closeLoadBar(this.loadContainer);
-        }, 1000);
+        this.loadService.closeLoadBar(this.loadContainer);
+        this.logService.showErrorLog('Ocorreu um erro, faça login novamente!');
+        this.router.navigate(['login'], { replaceUrl: true });
       });
   }
 

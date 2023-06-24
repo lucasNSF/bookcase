@@ -10,8 +10,8 @@ import {
   selector: '[appUpdateProfilePhoto]',
 })
 export class UpdateProfilePhotoDirective implements OnChanges {
-  @Input() pathImage: string | undefined = undefined;
-  @Input() isDark: boolean | undefined = undefined;
+  @Input() pathImage: string | undefined;
+  @Input() isDark: boolean | undefined;
 
   constructor(
     private elementRef: ElementRef<HTMLElement>,

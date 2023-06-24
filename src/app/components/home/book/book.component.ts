@@ -36,8 +36,15 @@ export class BookComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const authSub = this.authenticationService
-      .getUserInstance()
-      .subscribe(userInstance => (this.user = userInstance));
+      .getCurrentUser()
+      .subscribe(userInstance => {
+        if (userInstance) {
+          const userSub = this.userService
+            .getUser(userInstance.uid)
+            .subscribe(user => (this.user = user));
+          this.subscriptions.push(userSub);
+        }
+      });
     this.subscriptions.push(authSub);
   }
 
@@ -49,14 +56,11 @@ export class BookComponent implements OnInit, OnDestroy {
     event.stopPropagation();
 
     if (!this.book.favorite) {
-      this.userService.addFavoriteBook(this.book, this.user as Partial<User>);
+      this.userService.addFavoriteBook(this.book, this.user as User);
       this.book.favorite = true;
       this.likedBookEvent.emit(this.bookElement);
     } else {
-      this.userService.removeFavoriteBook(
-        this.book,
-        this.user as Partial<User>
-      );
+      this.userService.removeFavoriteBook(this.book, this.user as User);
       this.book.favorite = false;
       this.likedBookEvent.emit(this.bookElement);
     }
